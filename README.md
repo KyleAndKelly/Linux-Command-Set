@@ -1,7 +1,7 @@
 # Linux常用命令汇总(更新中)
 
 ## 性能检测相关命令
-
+![image](https://img-blog.csdnimg.cn/2020022521482651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### mpstat
 #### 功能:
 
