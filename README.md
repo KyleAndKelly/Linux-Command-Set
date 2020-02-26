@@ -1245,3 +1245,126 @@ tmpfs           392012     36  391976    1% /run/user/1000
 
 
 
+
+
+﻿## 网络相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226230336229.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![](https://img-blog.csdnimg.cn/20200226230348236.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226230404327.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### netstat
+#### 功能
+显示网络状态。
+#### 输入
+
+```powershell
+
+netstat [参数]
+
+-a-显示所有socket
+-l 显示所有处于监听状态的socket
+-t 显示所有使用tcp协议的socket
+-u-显示UDP传输协议的连线状况。
+-s 显示所有网络协议的统计信息。
+```
+
+#### 输出
+
+```powershell
+1. 列出所有端口 (包括监听和未监听的)
+列出所有端口:     netstat -a
+列出所有tcp端口:  netstat -at
+列出所有udp端口:  netstat -au
+2. 列出所有处于监听状态的 Sockets
+只显示监听端口:          netstat -l
+只列出所有监听tcp端口:   netstat -lt
+只列出所有监听udp端口:   netstat -lu
+只列出所有监听UNIX端口:  netstat -lx
+3. 显示每个协议的统计信息
+显示所有端口的统计信息 netstat -s
+```
+
+
+### ifconfig
+#### 功能
+用于显示或设置网络设备
+#### 输入
+
+```powershell
+
+语法
+ifconfig [网络设备][down up ][add<地址>][del<地址>][<hw<网络设备类型><硬件地址>][mtu<字节>][netmask<子网掩码>][IP地址]
+参数说明：
+
+add<地址> 设置网络设备IPv6的IP地址。
+del<地址> 删除网络设备IPv6的IP地址。
+down 关闭指定的网络设备。
+up 启动指定的网络设备。
+<hw<网络设备类型><硬件地址> 设置网络设备的类型与硬件MAC地址。
+
+mtu<字节> 设置网络设备的MTU。
+netmask<子网掩码> 设置网络设备的子网掩码。
+[IP地址] 指定网络设备的IP地址。
+
+```
+
+
+#### 实例
+
+```powershell
+显示网络设备信息
+
+# ifconfig        
+eth0   Link encap:Ethernet HWaddr 00:50:56:0A:0B:0C 
+     inet addr:192.168.0.3 Bcast:192.168.0.255 Mask:255.255.255.0
+     inet6 addr: fe80::250:56ff:fe0a:b0c/64 Scope:Link
+     UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+     RX packets:172220 errors:0 dropped:0 overruns:0 frame:0
+     TX packets:132379 errors:0 dropped:0 overruns:0 carrier:0
+     collisions:0 txqueuelen:1000 
+     RX bytes:87101880 (83.0 MiB) TX bytes:41576123 (39.6 MiB)
+     Interrupt:185 Base address:0x2024 
+
+lo    Link encap:Local Loopback 
+     inet addr:127.0.0.1 Mask:255.0.0.0
+     inet6 addr: ::1/128 Scope:Host
+     UP LOOPBACK RUNNING MTU:16436 Metric:1
+     RX packets:2022 errors:0 dropped:0 overruns:0 frame:0
+     TX packets:2022 errors:0 dropped:0 overruns:0 carrier:0
+     collisions:0 txqueuelen:0 
+     RX bytes:2459063 (2.3 MiB) TX bytes:2459063 (2.3 MiB)
+启动关闭指定网卡
+
+# ifconfig eth0 down
+# ifconfig eth0 up
+为网卡配置和删除IPv6地址
+
+# ifconfig eth0 add 33ffe:3240:800:1005::2/ 64 //为网卡诶之IPv6地址
+
+# ifconfig eth0 del 33ffe:3240:800:1005::2/ 64 //为网卡删除IPv6地址
+用ifconfig修改MAC地址
+
+# ifconfig eth0 down //关闭网卡
+# ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE //修改MAC地址
+# ifconfig eth0 up //启动网卡
+# ifconfig eth1 hw ether 00:1D:1C:1D:1E //关闭网卡并修改MAC地址 
+# ifconfig eth1 up //启动网卡
+配置IP地址
+
+# ifconfig eth0 192.168.1.56 
+//给eth0网卡配置IP地址
+# ifconfig eth0 192.168.1.56 netmask 255.255.255.0 
+// 给eth0网卡配置IP地址,并加上子掩码
+# ifconfig eth0 192.168.1.56 netmask 255.255.255.0 broadcast 192.168.1.255
+// 给eth0网卡配置IP地址,加上子掩码,加上个广播地址
+启用和关闭ARP协议
+
+# ifconfig eth0 arp  //开启
+# ifconfig eth0 -arp  //关闭
+设置最大传输单元
+
+# ifconfig eth0 mtu 1500 
+//设置能通过的最大数据包大小为 1500 bytes
+```
+
+
+
