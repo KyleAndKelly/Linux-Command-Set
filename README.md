@@ -1,4 +1,4 @@
-# Linux常用命令汇总(更新中)
+# 后端开发必须掌握的Linux命令汇总(更新中)
 
 ## 性能检测相关命令
 ![image](https://img-blog.csdnimg.cn/2020022521482651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
@@ -466,4 +466,498 @@ top命令中最重要的一个命令之一。
 切换显示的单位
 依次以k ->m->g->t->p单位选择
 ```
+
+
+
+﻿## 进程相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200225233143947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### ps
+#### 功能
+
+
+
+ps 用来查看进程状态
+不过这种查看是静态的 也就是只会显示 你输入命令那一刻的进程状态
+不会像top那样是动态变化的
+ps命令支持三种使用的语法格式：
+
+
+UNIX 风格，选项可以组合在一起，并且选项前必须有“-”连字符
+BSD 风格，选项可以组合在一起，但是选项前不能有“-”连字符
+GNU 风格的长选项，选项前有两个“-”连字符
+这几种风格可以混用，但是可能会发生冲突。
+
+#### 输入语法
+ps[参数]
+
+```cpp
+参数如下
+ps 没有属性参数的时候显示的是同一终端terminal下所有的进程
+ps T  显示同一个终端terminal下的所有进程 输出信息更丰富了一些
+ps a 显示同一控制终端tty下的所有进程  结果按照进程id来排序 输出的关键属性有 进程状态  进程控制终端
+ps c  显示进程的名称 不显示路径 
+ps -A 显示所有用户的所有进程  包括没有控制终端的进程 结果按照进程id排序 输出的关键属性有进程的控制终端 和ps -aux 相比 它输出的信息没有那么全面 比如 没有cpu和mem列
+ps -e 等于“ps -A”
+ps f  显示同一个控制终端tty下的进程  同时用树状结构的显示程序间的关系 
+ps -a  显示所有用户进程 不包括没有控制终端的进程 结果按照进程id排序
+ps -u  显示本用户下所有进程 不包括没有控制终端的进程  结果按照进程id排序 而且显示的进程信息很全面
+ps  -u [用户名] 显示指定用户名下的所有进程     不包括没有控制终端的进程  结果按照进程id排序 而且显示的进程信息很全面 比如 ps -u root
+ps -x  显示本用户所有进程 包括没有控制终端的进程 结果按照进程id排序
+
+ps -au 显示当前用户下所有的进程  不包括没有控制终端的进程
+ps -ax 显示所有用户的进程 包括没有控制终端的进程 输出信息里面没有USER用户列
+ps -ux 显示当前用户下所有进程     包括没有控制终端的进程
+ps -aux  显示所有用户的所有进程 包括没有控制终端的进程
+ps -aux --sort -pcpu  显示所有的进程 并且按照cpu使用率排序
+ps -aux --sort -pmem  显示所有的进程 并且按照cpu使用率排序
+ps -auxf 显示所有用户的所有进程 包括没有控制终端的进程 同时以树形结构显示进程间的关系
+ps -e  f  (注意e和f中间有空格)显示所有进程  包括没有控制终端的进程   同时会用树状结构的显示程序间的关系 
+
+
+
+
+
+
+
+
+
+```
+
+
+#### 输出信息
+
+```powershell
+
+
+USER - 运行该过程的用户
+PID 就是这个程序的 ID 
+PPID 则是其上级父程序的ID
+%CPU- 进程 cpu 利用率。
+%MEM - 进程驻留集大小占计算机物理内存的百分比。
+VSZ  - 进程的虚拟内存大小 KiB。
+RSS- 进程正在使用的物理内存的大小。
+PRI 这个是 Priority (优先执行序) 的缩写
+NI 这个是 Nice 值
+ADDR 这个是 kernel function，指出该程序在内存的那个部分。如果是个 running的程序，一般就是 "-"
+TTY 登入者的终端机位置
+TIME 使用掉的 CPU 时间。
+CMD 所下达的指令为何
+STAT 代表这个程序的状态 
+			ps工具标识进程的5种状态码: 
+			D 不可中断 
+			R 运行 
+			S 中断 
+			T 停止
+			Z 僵死 
+			在上面这些状态吗后面还会有下面这些后缀
+			< 优先级高的进程
+			N 优先级较低的进程
+			L 有些页被锁进内存；
+			s 进程的领导者（在它之下有子进程）；
+			l 多进程的（使用 CLONE_THREAD, 类似 NPTL pthreads）；
+			+ 位于后台的进程组；
+
+
+```
+
+####  实例
+
+```powershell
+实例1
+kylechen@kyle:~$ ps
+  PID TTY          TIME CMD
+17796 pts/0    00:00:00 bash
+24667 pts/0    00:00:00 ps
+
+```
+
+```powershell
+实例2
+kylechen@kyle:~$ ps -T
+  PID  SPID TTY          TIME CMD
+17796 17796 pts/0    00:00:00 bash
+24673 24673 pts/0    00:00:00 ps
+
+```
+
+```powershell
+实例3
+kylechen@kyle:~$ ps a
+  PID TTY      STAT   TIME COMMAND
+ 1444 tty2     Ssl+   0:00 /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SH
+ 1446 tty2     Sl+   19:57 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1
+ 1457 tty2     Sl+    0:00 /usr/lib/gnome-session/gnome-session-binary --session
+ 1590 tty2     Sl+   31:32 /usr/bin/gnome-shell
+ 1628 tty2     Sl     0:00 ibus-daemon --xim --panel disable
+ 1632 tty2     Sl     0:00 /usr/lib/ibus/ibus-dconf
+ 1636 tty2     Sl     0:00 /usr/lib/ibus/ibus-x11 --kill-daemon
+ 1708 tty2     Sl+    0:01 /usr/lib/gnome-settings-daemon/gsd-power
+ 1710 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-print-notification
+ 1711 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-rfkill
+ 1714 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-screensaver-proxy
+ 1717 tty2     Sl+    0:03 /usr/lib/gnome-settings-daemon/gsd-sharing
+ 1720 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-smartcard
+后面的篇幅太长 ...略掉
+```
+
+```powershell
+实例4
+kylechen@kyle:~$ ps a
+  PID TTY      STAT   TIME COMMAND
+ 1444 tty2     Ssl+   0:00 /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SH
+ 1446 tty2     Sl+   19:57 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1
+ 1457 tty2     Sl+    0:00 /usr/lib/gnome-session/gnome-session-binary --session
+ 1590 tty2     Sl+   31:32 /usr/bin/gnome-shell
+ 1628 tty2     Sl     0:00 ibus-daemon --xim --panel disable
+ 1632 tty2     Sl     0:00 /usr/lib/ibus/ibus-dconf
+ 1636 tty2     Sl     0:00 /usr/lib/ibus/ibus-x11 --kill-daemon
+ 1708 tty2     Sl+    0:01 /usr/lib/gnome-settings-daemon/gsd-power
+ 1710 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-print-notification
+ 1711 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-rfkill
+ 1714 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-screensaver-proxy
+ 1717 tty2     Sl+    0:03 /usr/lib/gnome-settings-daemon/gsd-sharing
+ 1720 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-smartcard
+后面的篇幅太长 ...略掉
+```
+
+
+```powershell
+实例5
+kylechen@kyle:~$ ps a
+  PID TTY      STAT   TIME COMMAND
+ 1444 tty2     Ssl+   0:00 /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SH
+ 1446 tty2     Sl+   19:57 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1
+ 1457 tty2     Sl+    0:00 /usr/lib/gnome-session/gnome-session-binary --session
+ 1590 tty2     Sl+   31:32 /usr/bin/gnome-shell
+ 1628 tty2     Sl     0:00 ibus-daemon --xim --panel disable
+ 1632 tty2     Sl     0:00 /usr/lib/ibus/ibus-dconf
+ 1636 tty2     Sl     0:00 /usr/lib/ibus/ibus-x11 --kill-daemon
+ 1708 tty2     Sl+    0:01 /usr/lib/gnome-settings-daemon/gsd-power
+ 1710 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-print-notification
+ 1711 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-rfkill
+ 1714 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-screensaver-proxy
+ 1717 tty2     Sl+    0:03 /usr/lib/gnome-settings-daemon/gsd-sharing
+ 1720 tty2     Sl+    0:00 /usr/lib/gnome-settings-daemon/gsd-smartcard
+后面的篇幅太长 ...略掉
+```
+
+
+```powershell
+实例6
+kylechen@kyle:~$ ps c
+  PID TTY      STAT   TIME COMMAND
+ 1444 tty2     Ssl+   0:00 gdm-x-session
+ 1446 tty2     Sl+   20:05 Xorg
+ 1457 tty2     Sl+    0:00 gnome-session-b
+ 1590 tty2     Sl+   31:46 gnome-shell
+ 1628 tty2     Sl     0:00 ibus-daemon
+ 1632 tty2     Sl     0:00 ibus-dconf
+ 1636 tty2     Sl     0:00 ibus-x11
+ 1708 tty2     Sl+    0:01 gsd-power
+ 1710 tty2     Sl+    0:00 gsd-print-notif
+ 1711 tty2     Sl+    0:00 gsd-rfkill
+ 1714 tty2     Sl+    0:00 gsd-screensaver
+ 1717 tty2     Sl+    0:03 gsd-sharing
+ 1720 tty2     Sl+    0:00 gsd-smartcard
+ 1725 tty2     Sl+    0:00 gsd-xsettings
+ 1728 tty2     Sl+    0:00 gsd-wacom
+ 1735 tty2     Sl+    0:00 gsd-sound
+ 1746 tty2     Sl+    0:00 gsd-a11y-settin
+ 1747 tty2     Sl+    0:00 gsd-clipboard
+ 1751 tty2     Sl+    0:04 gsd-color
+ 1754 tty2     Sl+    0:00 gsd-datetime
+ 1755 tty2     Sl+    0:02 gsd-housekeepin
+ 1756 tty2     Sl+    0:00 gsd-keyboard
+ 1759 tty2     Sl+    0:01 gsd-media-keys
+ 1763 tty2     Sl+    0:00 gsd-mouse
+ 1787 tty2     Sl+    0:00 gsd-printer
+ 1807 tty2     Sl+    0:00 gsd-disk-utilit
+ 1955 tty2     SLl+  38:57 chrome
+后面的篇幅太长 ...略掉
+```
+
+
+```powershell
+kylechen@kyle:~$ ps -aux --sort -pmem
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+kylechen  5330  0.4  9.6 2675660 377160 tty2   Sl+  2月25   4:39 /opt/XMind ZEN/XMind --type=renderer --no-sandbox --primordial-pipe-token=AE1FEBFB388740D8B17A50EFC55AA15A 
+kylechen  1955  3.7  9.5 1592304 373052 tty2   SLl+ 2月25  39:07 /opt/google/chrome/chrome
+kylechen 14282  4.0  7.9 1240340 312420 tty2   Sl+  2月25  35:06 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=131391
+kylechen 19242  0.4  6.9 1008672 273388 tty2   Sl+  00:25   3:11 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=1313919
+kylechen 24091  3.2  5.3 916448 209380 tty2    Sl+  12:50   0:38 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=1313919
+kylechen  1590  3.1  5.3 3998928 208124 tty2   Sl+  2月25  32:04 /usr/bin/gnome-shell
+kylechen 23859  0.6  5.3 899524 207904 tty2    Sl+  12:46   0:08 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=1313919
+kylechen 19254  0.1  4.9 866404 194272 tty2    Sl+  00:25   0:50 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=1313919
+kylechen  2439  0.0  3.5 1497400 140056 tty2   SLl+ 2月25   0:20 /usr/bin/gnome-software --gapplication-service
+kylechen 19681  1.3  2.9 640148 114188 tty2    Sl+  00:32  10:14 /proc/self/exe --type=gpu-process --field-trial-handle=13139199688567382976,8847439337573611818,131072 --gpu
+kylechen 19231  0.1  2.8 835928 110572 tty2    Sl+  00:25   0:59 /opt/google/chrome/chrome --type=renderer --disable-webrtc-apm-in-audio-service --field-trial-handle=1313919
+kylechen  5263  0.2  2.1 2234672 84160 tty2    Sl+  2月25   2:06 /opt/XMind ZEN/XMind
+后面篇幅过长 略掉
+```
+
+```powershell
+kylechen@kyle:~$ ps -e f
+  PID TTY      STAT   TIME COMMAND
+    2 ?        S      0:00 [kthreadd]
+    4 ?        I<     0:00  \_ [kworker/0:0H]
+    6 ?        I<     0:00  \_ [mm_percpu_wq]
+    7 ?        S      0:00  \_ [ksoftirqd/0]
+    8 ?        I      0:54  \_ [rcu_sched]
+    9 ?        I      0:00  \_ [rcu_bh]
+   10 ?        S      0:00  \_ [migration/0]
+   11 ?        S      0:00  \_ [watchdog/0]
+   12 ?        S      0:00  \_ [cpuhp/0]
+   13 ?        S      0:00  \_ [cpuhp/1]
+   14 ?        S      0:00  \_ [watchdog/1]
+   15 ?        S      0:00  \_ [migration/1]
+   16 ?        S      0:02  \_ [ksoftirqd/1]
+   18 ?        I<     0:00  \_ [kworker/1:0H]
+   19 ?        S      0:00  \_ [cpuhp/2]
+   20 ?        S      0:00  \_ [watchdog/2]
+   21 ?        S      0:00  \_ [migration/2]
+   22 ?        S      0:01  \_ [ksoftirqd/2]
+   24 ?        I<     0:00  \_ [kworker/2:0H]
+   25 ?        S      0:00  \_ [cpuhp/3]
+   26 ?        S      0:00  \_ [watchdog/3]
+   27 ?        S      0:00  \_ [migration/3]
+   28 ?        S      0:00  \_ [ksoftirqd/3]
+   30 ?        I<     0:00  \_ [kworker/3:0H]
+   31 ?        S      0:00  \_ [kdevtmpfs]
+   32 ?        I<     0:00  \_ [netns]
+   33 ?        S      0:00  \_ [rcu_tasks_kthre]
+   34 ?        S      0:00  \_ [kauditd]
+后面略掉
+```
+
+### pstree
+#### 功能
+清晰明了的用树形图显示所有进程的层次关系
+#### 输入语法
+pstree
+#### 输出信息
+
+```powershell
+systemd─┬─Main───4*[{Main}]
+        ├─ModemManager───2*[{ModemManager}]
+        ├─NetworkManager─┬─dhclient
+        │                └─2*[{NetworkManager}]
+        ├─accounts-daemon───2*[{accounts-daemon}]
+        ├─acpid
+        ├─avahi-daemon───avahi-daemon
+        ├─bluetoothd
+        ├─boltd───2*[{boltd}]
+        ├─chrome─┬─2*[cat]
+        │        ├─chrome─┬─chrome─┬─14*[chrome───10*[{chrome}]]
+        │        │        │        ├─chrome───19*[{chrome}]
+        │        │        │        ├─chrome───11*[{chrome}]
+        │        │        │        └─chrome───7*[{chrome}]
+        │        │        └─nacl_helper
+        │        ├─chrome───8*[{chrome}]
+        │        ├─chrome───6*[{chrome}]
+        │        ├─chrome───7*[{chrome}]
+        │        └─32*[{chrome}]
+        ├─colord───2*[{colord}]
+        ├─cron
+        ├─cups-browsed───2*[{cups-browsed}]
+        ├─cupsd───dbus
+        ├─2*[dbus-daemon]
+        ├─fcitx───{fcitx}
+        ├─fcitx-dbus-watc
+        ├─fwupd───4*[{fwupd}]
+        ├─gdm3─┬─gdm-session-wor─┬─gdm-x-session─┬─Xorg───3*[{Xorg}]
+        │      │                 │               ├─gnome-session-b─┬─gnome-shell─┬─XMind─┬─XMind─┬─XMind───13*[{XMind}]
+        │      │                 │               │                 │             │       │       └─XMind───14*[{XMind}]
+        │      │                 │               │                 │             │       ├─XMind───4*[{XMind}]
+        │      │                 │               │                 │             │       └─41*[{XMind}]
+        │      │                 │               │                 │             ├─ibus-daemon─┬─ibus-dconf───3*[{ibus-dconf}]
+        │      │                 │               │                 │             │             ├─ibus-engine-lib───3*[{ibus-engine-lib}]
+        │      │                 │               │                 │             │             ├─ibus-engine-sim───2*[{ibus-engine-sim}]
+        │      │                 │               │                 │             │             └─2*[{ibus-daemon}]
+        │      │                 │               │                 │             └─13*[{gnome-shell}]
+        │      │                 │               │                 ├─gnome-software───3*[{gnome-software}]
+        │      │                 │               │                 ├─gsd-a11y-settin───3*[{gsd-a11y-settin}]
+        │      │                 │               │                 ├─gsd-clipboard───2*[{gsd-clipboard}]
+        │      │                 │               │                 ├─gsd-color───3*[{gsd-color}]
+        │      │                 │               │                 ├─gsd-datetime───3*[{gsd-datetime}]
+        │      │                 │               │                 ├─gsd-disk-utilit───2*[{gsd-disk-utilit}]
+        │      │                 │               │                 ├─gsd-housekeepin───3*[{gsd-housekeepin}]
+        │      │                 │               │                 ├─gsd-keyboard───3*[{gsd-keyboard}]
+        │      │                 │               │                 ├─gsd-media-keys───4*[{gsd-media-keys}]
+        │      │                 │               │                 ├─gsd-mouse───3*[{gsd-mouse}]
+        │      │                 │               │                 ├─gsd-power───4*[{gsd-power}]
+        │      │                 │               │                 ├─gsd-print-notif───2*[{gsd-print-notif}]
+        │      │                 │               │                 ├─gsd-rfkill───2*[{gsd-rfkill}]
+        │      │                 │               │                 ├─gsd-screensaver───2*[{gsd-screensaver}]
+        │      │                 │               │                 ├─gsd-sharing───3*[{gsd-sharing}]
+        │      │                 │               │                 ├─gsd-smartcard───4*[{gsd-smartcard}]
+        │      │                 │               │                 ├─gsd-sound───3*[{gsd-sound}]
+        │      │                 │               │                 ├─gsd-wacom───2*[{gsd-wacom}]
+        │      │                 │               │                 ├─gsd-xsettings───3*[{gsd-xsettings}]
+        │      │                 │               │                 ├─ssh-agent
+        │      │                 │               │                 ├─update-notifier───3*[{update-notifier}]
+        │      │                 │               │                 └─3*[{gnome-session-b}]
+        │      │                 │               └─2*[{gdm-x-session}]
+        │      │                 └─2*[{gdm-session-wor}]
+        │      └─2*[{gdm3}]
+        ├─gnome-keyring-d───3*[{gnome-keyring-d}]
+        ├─gsd-printer───2*[{gsd-printer}]
+        ├─ibus-x11───2*[{ibus-x11}]
+        ├─irqbalance───{irqbalance}
+        ├─2*[kerneloops]
+        ├─login───bash
+        ├─lvmetad
+        ├─mysqld───26*[{mysqld}]
+        ├─networkd-dispat───{networkd-dispat}
+        ├─packagekitd───2*[{packagekitd}]
+        ├─polkitd───2*[{polkitd}]
+        ├─pulseaudio───2*[{pulseaudio}]
+        ├─rsyslogd───3*[{rsyslogd}]
+        ├─rtkit-daemon───2*[{rtkit-daemon}]
+        ├─snapd───21*[{snapd}]
+        ├─sogou-qimpanel───10*[{sogou-qimpanel}]
+        ├─sogou-qimpanel-
+        ├─sshd
+        ├─systemd─┬─(sd-pam)
+        │         ├─at-spi-bus-laun─┬─dbus-daemon
+        │         │                 └─3*[{at-spi-bus-laun}]
+        │         ├─at-spi2-registr───2*[{at-spi2-registr}]
+        │         ├─dbus-daemon
+        │         ├─dconf-service───2*[{dconf-service}]
+        │         ├─evolution-addre─┬─evolution-addre───5*[{evolution-addre}]
+        │         │                 └─4*[{evolution-addre}]
+        │         ├─evolution-calen─┬─evolution-calen───8*[{evolution-calen}]
+        │         │                 └─4*[{evolution-calen}]
+        │         ├─evolution-sourc───3*[{evolution-sourc}]
+        │         ├─gconfd-2
+        │         ├─gnome-shell-cal───5*[{gnome-shell-cal}]
+        │         ├─gnome-terminal-─┬─bash───pstree
+        │         │                 └─3*[{gnome-terminal-}]
+        │         ├─goa-daemon───3*[{goa-daemon}]
+        │         ├─goa-identity-se───3*[{goa-identity-se}]
+        │         ├─gvfs-afc-volume───3*[{gvfs-afc-volume}]
+        │         ├─gvfs-goa-volume───2*[{gvfs-goa-volume}]
+        │         ├─gvfs-gphoto2-vo───2*[{gvfs-gphoto2-vo}]
+        │         ├─gvfs-mtp-volume───2*[{gvfs-mtp-volume}]
+        │         ├─gvfs-udisks2-vo───2*[{gvfs-udisks2-vo}]
+        │         ├─gvfsd─┬─gvfsd-dnssd───2*[{gvfsd-dnssd}]
+        │         │       ├─gvfsd-network───3*[{gvfsd-network}]
+        │         │       ├─gvfsd-smb-brows───3*[{gvfsd-smb-brows}]
+        │         │       ├─gvfsd-trash───2*[{gvfsd-trash}]
+        │         │       └─2*[{gvfsd}]
+        │         ├─gvfsd-fuse───5*[{gvfsd-fuse}]
+        │         ├─gvfsd-metadata───2*[{gvfsd-metadata}]
+        │         ├─ibus-portal───2*[{ibus-portal}]
+        │         ├─xdg-document-po───5*[{xdg-document-po}]
+        │         └─xdg-permission-───2*[{xdg-permission-}]
+        ├─systemd-journal
+        ├─systemd-logind
+        ├─systemd-resolve
+        ├─systemd-timesyn───{systemd-timesyn}
+        ├─systemd-udevd
+        ├─thermald───{thermald}
+        ├─udisksd───4*[{udisksd}]
+        ├─unattended-upgr───{unattended-upgr}
+        ├─upowerd───2*[{upowerd}]
+        ├─whoopsie───2*[{whoopsie}]
+        └─wpa_supplicant
+
+```
+
+
+### kill
+#### 功能
+发送信号到指定进程
+
+#### 输入语法
+
+```powershell
+有两种方式
+1.kill [命令参数] 
+2.kill [信号参数] [指定进程]
+```
+
+```powershell
+kill [命令参数] 
+
+-l  后面加信号名称 显示指定信号对应的编号 如果后面不加信号名称 则显示所有信号对应编号
+-u 后面加用户名称 表示杀死指定用户的所用进程 即给指定用户的所有进程发送SIGTERM信号
+```
+
+```powershell
+kill [信号参数] [指定进程]
+
+信号参数--就是你要给指定进程发送的信号值 可以是名称的形式比如-SIGKILL ,-SIGHUP 也可以是编号的形式 比如-9 ,-1 分别对应SIGKILL ,SIGHUP.
+指定进程--就是你想要给其发送信号的进程pid 可以通过一些手段比如ps/pstree/top等获取
+
+
+注意点:
+
+1.也可以不指定信号参数 这样默认发送的就是编号为15的SIGTERM信号
+
+2.当用kill向这些进程发送信号时，必须是这些进程的主人。
+如果试图给一个没有权限或者不存在的进程发送信号，就会得到一个错误信息。
+
+3.只有第9种信号(SIGKILL)才可以无条件终止进程，其他信号进程都有权利忽略。
+ 下面是常用的信号：
+SIGHUP    1    终端断线
+SIGINT     2    中断（同 Ctrl + C）
+SIGQUIT    3    退出（同 Ctrl + \）
+SIGTERM   15    终止
+SIGKILL    9    强制终止
+SIGCONT   18    继续（与STOP相反， fg/bg命令）
+SIGSTOP    19    暂停（同 Ctrl + Z）
+
+4.init进程是不可杀的
+ ```
+
+####  实例
+
+```powershell
+实例1 : 显示所有信号及其编号
+kylechen@kyle:~$ kill -l
+ 1) SIGHUP	 2) SIGINT	 3) SIGQUIT	 4) SIGILL	 5) SIGTRAP
+ 6) SIGABRT	 7) SIGBUS	 8) SIGFPE	 9) SIGKILL	10) SIGUSR1
+11) SIGSEGV	12) SIGUSR2	13) SIGPIPE	14) SIGALRM	15) SIGTERM
+16) SIGSTKFLT	17) SIGCHLD	18) SIGCONT	19) SIGSTOP	20) SIGTSTP
+21) SIGTTIN	22) SIGTTOU	23) SIGURG	24) SIGXCPU	25) SIGXFSZ
+26) SIGVTALRM	27) SIGPROF	28) SIGWINCH	29) SIGIO	30) SIGPWR
+31) SIGSYS	34) SIGRTMIN	35) SIGRTMIN+1	36) SIGRTMIN+2	37) SIGRTMIN+3
+38) SIGRTMIN+4	39) SIGRTMIN+5	40) SIGRTMIN+6	41) SIGRTMIN+7	42) SIGRTMIN+8
+43) SIGRTMIN+9	44) SIGRTMIN+10	45) SIGRTMIN+11	46) SIGRTMIN+12	47) SIGRTMIN+13
+48) SIGRTMIN+14	49) SIGRTMIN+15	50) SIGRTMAX-14	51) SIGRTMAX-13	52) SIGRTMAX-12
+53) SIGRTMAX-11	54) SIGRTMAX-10	55) SIGRTMAX-9	56) SIGRTMAX-8	57) SIGRTMAX-7
+58) SIGRTMAX-6	59) SIGRTMAX-5	60) SIGRTMAX-4	61) SIGRTMAX-3	62) SIGRTMAX-2
+63) SIGRTMAX-1	64) SIGRTMAX	
+```
+
+```powershell
+实例2 :  显示SIGHIP的编号
+kylechen@kyle:~$ kill -l SIGHUP
+1
+
+```
+
+```powershell
+实例3: 给用户kylechen的所有进程发送默认信号SIGTERM
+kylechen@kyle:~$ kill -u kylechen
+```
+
+```powershell
+实例4  给进程26467发送默认信号 SIGTERM
+kylechen@kyle:~$ kill 26467
+
+```
+```powershell
+实例5  给进程26467发送编号为9的信号 SIGKILL
+kylechen@kyle:~$ kill  -9 26467
+
+```
+
+```powershell
+实例5 给进程26467发送名称为SIGHUP的信号 
+kylechen@kyle:~$ kill  -SIGHUP 26467
+
+```
+
+
 
