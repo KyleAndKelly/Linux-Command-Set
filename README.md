@@ -965,3 +965,283 @@ kylechen@kyle:~$ kill  -SIGHUP 26467
 
 
 
+
+
+
+
+
+﻿##  磁盘相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226215614331.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226215628466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+### du
+#### 功能
+显示指定的目录或文件所占用的磁盘空间。
+#### 输入语法
+
+```powershell
+
+du [参数][目录路径或文件路径]
+
+常用参数:
+-a 显示指定目录下所有单独的文件大小 后面不加文件或者目录路径则表示本目录
+-b 以byte为单位显示
+-c 除了显示单独的目录或者文件的大小外，同时也显示所有目录或文件的总和。
+-h 以K，M，G为单位显示，提高信息的可读性。
+如果不加参数则显示当前目录下总的大小
+```
+
+#### 实例
+
+```powershell
+kylechen@kyle:~/test$ du
+20	.
+
+```
+
+
+```powershell
+ylechen@kyle:~/test$ du -a
+16	./test.jpg
+0	./readme.txt
+20	.
+
+```
+
+```powershell
+kylechen@kyle:~/test$ du -ab
+14491	./test.jpg
+0	./readme.txt
+18587	.
+
+```
+
+```powershell
+kylechen@kyle:~/test$ du -abc
+14491	./test.jpg
+0	./readme.txt
+18587	.
+18587	总用量
+
+
+```
+### df
+#### 功能
+显示目前在Linux系统上的文件系统的磁盘使用情况统计。
+#### 输入语法
+
+```powershell
+df [参数]
+```
+
+```powershell
+df  不加参数 显示整个磁盘空间中文件系统的使用情况
+df -h 以人类友好格式显示文件系统硬盘空间使用情况 这样就会在显示合适的单位 比如 K M G
+df -T 显示文件系统类型
+df -t ext4 仅列出某些文件系统 比如这里是限制只列出ext4系统的文件系统
+df -x ext4 排除指定类型的文件系统 比如这里是列出了除 ext4 类型以外的全部文件系统
+```
+
+#### 输出信息
+
+```powershell
+Filesystem – Linux 系统中的文件系统
+1K-blocks – 文件系统的大小，用 1K 大小的块来表示。
+Used – 以 1K 大小的块所表示的已使用数量。
+Available – 以 1K 大小的块所表示的可用空间的数量。
+Use% – 文件系统中已使用的百分比。
+Mounted on – 已挂载的文件系统的挂载点。
+```
+
+#### 实例
+
+```powershell
+kylechen@kyle:~/test$ df
+文件系统                        1K-块      已用     可用 已用% 挂载点
+udev                          1936656         0  1936656    0% /dev
+tmpfs                          392016      2068   389948    1% /run
+/dev/mapper/ubuntu--vg-root 243559804 181980468 49137532   79% /
+tmpfs                         1960060    311900  1648160   16% /dev/shm
+tmpfs                            5120         4     5116    1% /run/lock
+tmpfs                         1960060         0  1960060    0% /sys/fs/cgroup
+/dev/loop0                       1024      1024        0  100% /snap/gnome-logs/81
+/dev/loop1                     127360    127360        0  100% /snap/vscode/93
+/dev/loop2                       4352      4352        0  100% /snap/gnome-calculator/544
+/dev/loop3                     144128    144128        0  100% /snap/gnome-3-26-1604/98
+/dev/loop4                       1024      1024        0  100% /snap/gnome-logs/73
+/dev/loop5                        256       256        0  100% /snap/gtk2-common-themes/9
+/dev/loop6                     126976    126976        0  100% /snap/vscode/89
+/dev/loop7                     164096    164096        0  100% /snap/gnome-3-28-1804/116
+/dev/loop8                      93568     93568        0  100% /snap/core/8689
+/dev/loop9                      56064     56064        0  100% /snap/core18/1668
+/dev/loop11                     56064     56064        0  100% /snap/core18/1650
+/dev/loop10                      4352      4352        0  100% /snap/gnome-calculator/536
+/dev/loop12                     15232     15232        0  100% /snap/remmina/3995
+/dev/loop13                    267008    267008        0  100% /snap/kde-frameworks-5-core18/32
+/dev/loop14                       256       256        0  100% /snap/gtk2-common-themes/5
+/dev/loop15                     15232     15232        0  100% /snap/remmina/3968
+/dev/loop16                     15104     15104        0  100% /snap/gnome-characters/399
+/dev/sda1                      523248      2284   520964    1% /boot/efi
+/dev/loop17                    160512    160512        0  100% /snap/gnome-3-28-1804/110
+/dev/loop18                    127872    127872        0  100% /snap/vscode/87
+/dev/loop19                     15104     15104        0  100% /snap/gnome-characters/375
+/dev/loop20                     98688     98688        0  100% /snap/typora-alanzanattadev/2
+/dev/loop21                      3840      3840        0  100% /snap/gnome-system-monitor/123
+/dev/loop22                     98176     98176        0  100% /snap/kdenlive/22
+/dev/loop23                     98304     98304        0  100% /snap/kdenlive/13
+/dev/loop24                     46080     46080        0  100% /snap/gtk-common-themes/1440
+/dev/loop25                    144128    144128        0  100% /snap/gnome-3-26-1604/97
+/dev/loop26                     45312     45312        0  100% /snap/gtk-common-themes/1353
+/dev/loop27                    259584    259584        0  100% /snap/electronic-wechat/7
+/dev/loop28                     93568     93568        0  100% /snap/core/8592
+/dev/loop29                      3840      3840        0  100% /snap/gnome-system-monitor/127
+tmpfs                          392012        16   391996    1% /run/user/121
+tmpfs                          392012        36   391976    1% /run/user/1000
+
+```
+
+
+```powershell
+kylechen@kyle:~/test$ df -h
+文件系统                     容量  已用  可用 已用% 挂载点
+udev                         1.9G     0  1.9G    0% /dev
+tmpfs                        383M  2.1M  381M    1% /run
+/dev/mapper/ubuntu--vg-root  233G  174G   47G   79% /
+tmpfs                        1.9G  307M  1.6G   17% /dev/shm
+tmpfs                        5.0M  4.0K  5.0M    1% /run/lock
+tmpfs                        1.9G     0  1.9G    0% /sys/fs/cgroup
+/dev/loop0                   1.0M  1.0M     0  100% /snap/gnome-logs/81
+/dev/loop1                   125M  125M     0  100% /snap/vscode/93
+/dev/loop2                   4.3M  4.3M     0  100% /snap/gnome-calculator/544
+/dev/loop3                   141M  141M     0  100% /snap/gnome-3-26-1604/98
+/dev/loop4                   1.0M  1.0M     0  100% /snap/gnome-logs/73
+/dev/loop5                   256K  256K     0  100% /snap/gtk2-common-themes/9
+/dev/loop6                   124M  124M     0  100% /snap/vscode/89
+/dev/loop7                   161M  161M     0  100% /snap/gnome-3-28-1804/116
+/dev/loop8                    92M   92M     0  100% /snap/core/8689
+/dev/loop9                    55M   55M     0  100% /snap/core18/1668
+/dev/loop11                   55M   55M     0  100% /snap/core18/1650
+/dev/loop10                  4.3M  4.3M     0  100% /snap/gnome-calculator/536
+/dev/loop12                   15M   15M     0  100% /snap/remmina/3995
+/dev/loop13                  261M  261M     0  100% /snap/kde-frameworks-5-core18/32
+/dev/loop14                  256K  256K     0  100% /snap/gtk2-common-themes/5
+/dev/loop15                   15M   15M     0  100% /snap/remmina/3968
+/dev/loop16                   15M   15M     0  100% /snap/gnome-characters/399
+/dev/sda1                    511M  2.3M  509M    1% /boot/efi
+/dev/loop17                  157M  157M     0  100% /snap/gnome-3-28-1804/110
+/dev/loop18                  125M  125M     0  100% /snap/vscode/87
+/dev/loop19                   15M   15M     0  100% /snap/gnome-characters/375
+/dev/loop20                   97M   97M     0  100% /snap/typora-alanzanattadev/2
+/dev/loop21                  3.8M  3.8M     0  100% /snap/gnome-system-monitor/123
+/dev/loop22                   96M   96M     0  100% /snap/kdenlive/22
+/dev/loop23                   96M   96M     0  100% /snap/kdenlive/13
+/dev/loop24                   45M   45M     0  100% /snap/gtk-common-themes/1440
+/dev/loop25                  141M  141M     0  100% /snap/gnome-3-26-1604/97
+/dev/loop26                   45M   45M     0  100% /snap/gtk-common-themes/1353
+/dev/loop27                  254M  254M     0  100% /snap/electronic-wechat/7
+/dev/loop28                   92M   92M     0  100% /snap/core/8592
+/dev/loop29                  3.8M  3.8M     0  100% /snap/gnome-system-monitor/127
+tmpfs                        383M   16K  383M    1% /run/user/121
+tmpfs                        383M   36K  383M    1% /run/user/1000
+
+```
+
+
+```powershell
+kylechen@kyle:~/test$ df -T
+文件系统                    类型         1K-块      已用     可用 已用% 挂载点
+udev                        devtmpfs   1936656         0  1936656    0% /dev
+tmpfs                       tmpfs       392016      2068   389948    1% /run
+/dev/mapper/ubuntu--vg-root ext4     243559804 181980572 49137428   79% /
+tmpfs                       tmpfs      1960060    302084  1657976   16% /dev/shm
+tmpfs                       tmpfs         5120         4     5116    1% /run/lock
+tmpfs                       tmpfs      1960060         0  1960060    0% /sys/fs/cgroup
+/dev/loop0                  squashfs      1024      1024        0  100% /snap/gnome-logs/81
+/dev/loop1                  squashfs    127360    127360        0  100% /snap/vscode/93
+/dev/loop2                  squashfs      4352      4352        0  100% /snap/gnome-calculator/544
+/dev/loop3                  squashfs    144128    144128        0  100% /snap/gnome-3-26-1604/98
+/dev/loop4                  squashfs      1024      1024        0  100% /snap/gnome-logs/73
+/dev/loop5                  squashfs       256       256        0  100% /snap/gtk2-common-themes/9
+/dev/loop6                  squashfs    126976    126976        0  100% /snap/vscode/89
+/dev/loop7                  squashfs    164096    164096        0  100% /snap/gnome-3-28-1804/116
+/dev/loop8                  squashfs     93568     93568        0  100% /snap/core/8689
+/dev/loop9                  squashfs     56064     56064        0  100% /snap/core18/1668
+/dev/loop11                 squashfs     56064     56064        0  100% /snap/core18/1650
+/dev/loop10                 squashfs      4352      4352        0  100% /snap/gnome-calculator/536
+/dev/loop12                 squashfs     15232     15232        0  100% /snap/remmina/3995
+/dev/loop13                 squashfs    267008    267008        0  100% /snap/kde-frameworks-5-core18/32
+/dev/loop14                 squashfs       256       256        0  100% /snap/gtk2-common-themes/5
+/dev/loop15                 squashfs     15232     15232        0  100% /snap/remmina/3968
+/dev/loop16                 squashfs     15104     15104        0  100% /snap/gnome-characters/399
+/dev/sda1                   vfat        523248      2284   520964    1% /boot/efi
+/dev/loop17                 squashfs    160512    160512        0  100% /snap/gnome-3-28-1804/110
+/dev/loop18                 squashfs    127872    127872        0  100% /snap/vscode/87
+/dev/loop19                 squashfs     15104     15104        0  100% /snap/gnome-characters/375
+/dev/loop20                 squashfs     98688     98688        0  100% /snap/typora-alanzanattadev/2
+/dev/loop21                 squashfs      3840      3840        0  100% /snap/gnome-system-monitor/123
+/dev/loop22                 squashfs     98176     98176        0  100% /snap/kdenlive/22
+/dev/loop23                 squashfs     98304     98304        0  100% /snap/kdenlive/13
+/dev/loop24                 squashfs     46080     46080        0  100% /snap/gtk-common-themes/1440
+/dev/loop25                 squashfs    144128    144128        0  100% /snap/gnome-3-26-1604/97
+/dev/loop26                 squashfs     45312     45312        0  100% /snap/gtk-common-themes/1353
+/dev/loop27                 squashfs    259584    259584        0  100% /snap/electronic-wechat/7
+/dev/loop28                 squashfs     93568     93568        0  100% /snap/core/8592
+/dev/loop29                 squashfs      3840      3840        0  100% /snap/gnome-system-monitor/127
+tmpfs                       tmpfs       392012        16   391996    1% /run/user/121
+tmpfs                       tmpfs       392012        36   391976    1% /run/user/1000
+
+```
+
+```powershell
+kylechen@kyle:~/test$ df -t ext4
+文件系统                        1K-块      已用     可用 已用% 挂载点
+/dev/mapper/ubuntu--vg-root 243559804 181980664 49137336   79% /
+
+```
+
+```powershell
+kylechen@kyle:~/test$ df -x ext4
+文件系统         1K-块   已用    可用 已用% 挂载点
+udev           1936656      0 1936656    0% /dev
+tmpfs           392016   2068  389948    1% /run
+tmpfs          1960060 299520 1660540   16% /dev/shm
+tmpfs             5120      4    5116    1% /run/lock
+tmpfs          1960060      0 1960060    0% /sys/fs/cgroup
+/dev/loop0        1024   1024       0  100% /snap/gnome-logs/81
+/dev/loop1      127360 127360       0  100% /snap/vscode/93
+/dev/loop2        4352   4352       0  100% /snap/gnome-calculator/544
+/dev/loop3      144128 144128       0  100% /snap/gnome-3-26-1604/98
+/dev/loop4        1024   1024       0  100% /snap/gnome-logs/73
+/dev/loop5         256    256       0  100% /snap/gtk2-common-themes/9
+/dev/loop6      126976 126976       0  100% /snap/vscode/89
+/dev/loop7      164096 164096       0  100% /snap/gnome-3-28-1804/116
+/dev/loop8       93568  93568       0  100% /snap/core/8689
+/dev/loop9       56064  56064       0  100% /snap/core18/1668
+/dev/loop11      56064  56064       0  100% /snap/core18/1650
+/dev/loop10       4352   4352       0  100% /snap/gnome-calculator/536
+/dev/loop12      15232  15232       0  100% /snap/remmina/3995
+/dev/loop13     267008 267008       0  100% /snap/kde-frameworks-5-core18/32
+/dev/loop14        256    256       0  100% /snap/gtk2-common-themes/5
+/dev/loop15      15232  15232       0  100% /snap/remmina/3968
+/dev/loop16      15104  15104       0  100% /snap/gnome-characters/399
+/dev/sda1       523248   2284  520964    1% /boot/efi
+/dev/loop17     160512 160512       0  100% /snap/gnome-3-28-1804/110
+/dev/loop18     127872 127872       0  100% /snap/vscode/87
+/dev/loop19      15104  15104       0  100% /snap/gnome-characters/375
+/dev/loop20      98688  98688       0  100% /snap/typora-alanzanattadev/2
+/dev/loop21       3840   3840       0  100% /snap/gnome-system-monitor/123
+/dev/loop22      98176  98176       0  100% /snap/kdenlive/22
+/dev/loop23      98304  98304       0  100% /snap/kdenlive/13
+/dev/loop24      46080  46080       0  100% /snap/gtk-common-themes/1440
+/dev/loop25     144128 144128       0  100% /snap/gnome-3-26-1604/97
+/dev/loop26      45312  45312       0  100% /snap/gtk-common-themes/1353
+/dev/loop27     259584 259584       0  100% /snap/electronic-wechat/7
+/dev/loop28      93568  93568       0  100% /snap/core/8592
+/dev/loop29       3840   3840       0  100% /snap/gnome-system-monitor/127
+tmpfs           392012     16  391996    1% /run/user/121
+tmpfs           392012     36  391976    1% /run/user/1000
+
+```
+
+
+
