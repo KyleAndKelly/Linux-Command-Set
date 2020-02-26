@@ -1,5 +1,8 @@
 # 后端开发必须掌握的Linux命令汇总(更新中)
 
+
+
+
 ## 性能检测相关命令
 ![image](https://img-blog.csdnimg.cn/2020022521482651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### mpstat
@@ -469,7 +472,8 @@ top命令中最重要的一个命令之一。
 
 
 
-﻿## 进程相关命令
+## 进程相关命令
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200225233143947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### ps
 #### 功能
