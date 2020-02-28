@@ -2,6 +2,7 @@
 
 
 ## bash相关操作
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228090851592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ###  数据流重导向
 #### 功能
 将命令在终端的标准输出 标准出错 重定向到别的地方比如文件中
