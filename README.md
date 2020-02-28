@@ -212,6 +212,153 @@ unalias lm  撤销刚才的重命名
 即获取命令的manpage   用man命令 
 
 
+
+
+
+
+## 变量相关命令
+### 变量的声明赋值
+#### 功能
+相当于是声明一个变量 同时给变量赋值 
+#### 输入
+声明方法1:  通过 赋值符号 =
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228123044705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+ 声明方法2: 通过read
+ 
+用read以后 变量赋值是通过**终端等待用户的键盘输入** 来执行
+```powershell
+[dmtsai@study ~]$ read [-pt] variable
+选项与参数：
+-p ：后面可以接提示字符！
+-t ：后面可以接等待的『秒数！』
+```
+
+#### 实例
+```powershell
+变量的普通赋值形式
+[dmtsai@study ~]$ CHENWEIJIE=0820
+```
+
+
+```powershell
+让用户由键盘输入一内容，将该内容变成名为 atest 的变量
+[dmtsai@study ~]$ read ates
+This is a test <==此时光标会等待你输入！请输入左侧文字看看
+[dmtsai@study ~]$ echo ${atest}
+This is a test <==你刚刚输入的数据已经变成一个变量内
+```
+
+```powershell
+让用户由键盘输入一内容, 会有提示的字符串提示你输入 , 然后将该内容变成名为 name 的变量
+kylechen@kyle:~$ read -p"请输入你的姓名:" -t 5 name
+请输入你的姓名:
+kylechen@kyle:~$ echo $name
+chenweijie
+
+```
+
+### 变量的查看转换
+#### 功能
+查看或转化指定的变量 
+#### 输入
+
+```powershell
+echo 查看指定单个变量的值 可以用用**echo PATH** 或者 **echo ${PATH}** 格式
+env  查看所有环境变量
+set 查看所有变量(包括用户设定的变量和环境变量,其他bash接口变量)
+export  变量名=变量值 将自定义变量转化成环境变量
+
+关于环境变量:
+1.  环境变量是用来定义系统运行环境的一些参数，比如每个用户不同的家目录（HOME）、邮件存放位置（MAIL）等。
+2.   环境变量所有终端下所有程序都可直接取用的  可以理解为 环境变量=全局变量  自定义变量=局部变量
+3.   可以通过export将自定义变量设定为当前终端下的环境变量 但是也就是只能当前终端下的父子进程可以取用 其他终端不行
+ 4.  可以通过自定义变量的export语句添加到个人目录下的.bashrc文件中 这样当前用户的所有程序都可以使用这个环境变量
+5.   可以通过将自定义变量的export语句添加到/etc/profile文件下 这样所有用户的所有程序都可以使用这个环境变量
+```
+
+#### 实例
+
+```powershell
+输出自定义变量myname
+
+[dmtsai@study ~]$ echo ${myname}
+ <==这里并没有任何数据～因为这个变量尚未被设定！是空的[
+ dmtsai@study ~]$ myname=VBird
+ [dmtsai@study ~]$ echo ${myname}
+ VBird <==出现了！因为这个变量已经被设定
+```
+
+```powershell
+输出变量PATH
+[dmtsai@study ~]$ echo  $PATH
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
+```
+```powershell
+输出变量PATH
+[dmtsai@study ~]$ echo  ${PATH}
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
+```
+
+```powershell
+列出目前的 shell 环境下的所有环境变量与其内容。
+[dmtsai@study ~]$ env
+```
+
+```powershell
+列出目前的 shell 环境下的所有变量。
+[dmtsai@study ~]$ set
+```
+
+```powershell
+将自定义的变量CHENWEIJIE转换成环境变量
+export CHENWEIJIE=0820 
+```
+
+
+
+### 变量的类型指定
+
+#### 功能
+变量声明的时候指定类型
+#### 输入
+
+```powershell
+$ declare [-aixr] variable
+
+选项与参数：
+-a ：将后面名为 variable 的变量定义成为数组 (array) 类型
+-i ：将后面名为 variable 的变量定义成为整数数字 (integer) 类型
+-x ：用法与 export 一样，就是将后面的 variable 变成环境变量；
+-r ：将变量设定成为 readonly 类型，该变量不可被更改内容，也不能 unset
+```
+
+#### 实例
+
+```powershell
+范例一：让变量 sum 进行 100+300+50 的加总结果
+[dmtsai@study ~]$ sum=100+300+5
+[dmtsai@study ~]$ echo ${sum}100+300+50 <==咦！怎么没有帮我计算加总？因为这是文字型态的变量属性啊！[dmtsai@study ~]$ declare -i sum=100+300+50
+[dmtsai@study ~]$ echo ${sum}
+450 
+```
+
+```powershell
+范例二：将 sum 变成环境变量
+[dmtsai@study ~]$ declare -x sum
+[dmtsai@study ~]$ export | grep sum
+declare -ix sum="450" <==果然出现了！包括有 i 与 x 的宣告！
+
+范例三：让 sum 变成只读属性，不可更动！[dmtsai@study ~]$ declare -r sum
+[dmtsai@study ~]$ sum=tesgtin-bash: sum: readonly variable <==老天爷～不能改这个变数了！
+
+范例四：让 sum 变成非环境变量的自定义变量吧
+[dmtsai@study ~]$ declare +x sum <== 将 - 变成 + 可以进行『取消』动作
+
+[dmtsai@study ~]$ declare -p sum <== -p 可以单独列出变量的类型
+declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x 
+```
+
+
 ## 性能检测相关命令
 ![image](https://img-blog.csdnimg.cn/2020022521482651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### mpstat
@@ -1173,13 +1320,18 @@ kylechen@kyle:~$ kill  -SIGHUP 26467
 ```
 
 
+### ulimit 
+#### 功能
+限制用户使用系统的某些资源 包括可以开启的文件数量， 可以使用的 CPU 时间，可以使用的内存总量等等。
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228132814523.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+配额可以使unlimited 这样就设定为无限制
 
 
 
 
 
-
-﻿##  磁盘相关命令
+## 磁盘相关命令
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226215614331.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226215628466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 
@@ -1456,7 +1608,7 @@ tmpfs           392012     36  391976    1% /run/user/1000
 
 
 
-﻿## 网络相关命令
+## 网络相关命令
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226230336229.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ![](https://img-blog.csdnimg.cn/20200226230348236.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200226230404327.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
