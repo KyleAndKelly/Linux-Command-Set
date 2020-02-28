@@ -217,6 +217,7 @@ unalias lm  撤销刚才的重命名
 
 
 ## 变量相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228133440880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### 变量的声明赋值
 #### 功能
 相当于是声明一个变量 同时给变量赋值 
