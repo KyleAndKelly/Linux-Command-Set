@@ -360,6 +360,59 @@ declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x
 ```
 
 
+
+## 管道相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143647614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### cut
+#### 功能
+ 主要的用途在于将『同一行里面的数据进行分解！』  处理的讯息是以『行』为单位
+ 以某些字符当作分割的参数，然后来将数据加以切割，
+ 以取得我们所需要的数据。
+#### 输入
+
+```bash
+cut[参数]
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143932517.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144008177.png)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281442412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144301192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022814431570.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### grep
+#### 功能
+刚刚的 cut 是将一行讯息当中，取出某部分我们想要的，
+而 grep 则是分析一行讯息， 若当中有我
+们所需要的信息，就将该行拿出来～
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144353837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144408503.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### sort
+#### 功能
+把输出的结果进行排序
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144422185.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144509260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144519163.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### uniq
+#### 功能
+将重复的资料仅列出一个显示
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144548383.png)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144559526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### wc
+#### 功能
+统计有多少字符 多少行
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281446381.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144651249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+
 ## 性能检测相关命令
 ![image](https://img-blog.csdnimg.cn/2020022521482651.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### mpstat
