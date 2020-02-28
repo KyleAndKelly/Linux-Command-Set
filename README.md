@@ -215,10 +215,9 @@ unalias lm  撤销刚才的重命名
 
 
 
-
 ## 变量相关命令
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228133440880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### 变量的声明赋值
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228133440880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 #### 功能
 相当于是声明一个变量 同时给变量赋值 
 #### 输入
@@ -357,6 +356,46 @@ declare -ix sum="450" <==果然出现了！包括有 i 与 x 的宣告！
 
 [dmtsai@study ~]$ declare -p sum <== -p 可以单独列出变量的类型
 declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x 
+```
+
+### 变量的比较判断
+
+#### 功能
+类似test命令 
+利用中括号等运算符判断里面的变量是否为空 
+里面的变量比较是否为真等任务
+#### 输入
+
+```bash
+[ "$HOME" == "$MAIL"]  判断变量HOME和MAIL是否相同
+ [ -z "${HOME}" ]  判断变量HOME是否为空
+ 
+如上所示 中括号的使用方法与 test 几乎一模一样啊
+只不过需要有以下注意点
+```
+
+使用注意点:
+
+```bash
+1.在中括号内的变量，最好都以双引号括号起来； 因为可能出现以下问题
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211809474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+```bash
+2/在中括号内的常数，最好都以单或双引号括号
+```
+
+```powershell
+3.在中括号 [] 内的每个组件都需要有空格键来分隔；
+使用中括号必须要特别注意，因为中括号用在很多地方，
+包括通配符与正规表示法等等，
+所以如果要在 bash 的语法当中使用中括号作为 shell 的判断式时，
+必须要注意中括号的两端需要有空格符来分隔
+ 假设我空格键使用『□』符号来表示，那么，在这些地方你都需要有空格键：
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211244883.png)
+
+
 ```
 
 
