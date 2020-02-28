@@ -1,6 +1,214 @@
-# 后端开发必须掌握的Linux命令汇总(更新中)
+# 一个小时掌握所有Linux核心命令(2020.02.28更新)
 
 
+﻿## bash相关操作
+###  数据流重导向
+#### 功能
+将命令在终端的标准输出 标准出错 重定向到别的地方比如文件中
+或者读取文件的内容来取代标准输入
+
+#### 输入语法
+
+```powershell
+1. 标准输入 (stdin) ：代码为 0 ，使用 < 或 << ； 一般和cat配合使用将一个文件的内容输出到另外一个文件
+2. 标准输出 (stdout)：代码为 1 ，使用 > 或 >> ； 将命令的标准输出重定向到另外一个位置 比如文件中
+3.  标准错误输出(stderr)：代码为 2 ，使用 2> 或 2>> 将命令的标注出错重定向到另外一个位置比如文件中
+```
+#### 实例
+
+```powershell
+实例1:
+将命令"ll / "的标准输出存到 ~/rootfile这个文件中  (也可以用1>)
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / > ~/rootfile 
+```
+
+```powershell
+实例2:
+将命令"ll / "的标准输出存到 ~/rootfile这个文件中(也可以用1>>)
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则会将标准输出的内容添加到这个文件原有内容的末尾
+[dmtsai@study ~]$ ll / >> ~/rootfile 
+```
+
+```powershell
+实例3:
+将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 2> ~/rootfile 
+```
+
+```powershell
+实例4:
+将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件  则会将标准错误的内容添加到这个文件原有内容的末尾
+[dmtsai@study ~]$ ll / 2>>~/rootfile 
+```
+
+
+```powershell
+实例5:
+将命令"ll / "的标准输出存到 stdoutput.txt       将标准错误输出到stderr.txt 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 1>stdoutput.txt 2>~/stderr.txt 
+```
+
+```powershell
+实例6:
+将命令"ll / "的标准输出和标准错误都存到 stdoutput.txt       
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件  则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>&1  正确写法
+[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>~/stdoutput.txt   错误写法 会导致文件中两种输出是乱序的
+```
+
+```powershell
+实例7:
+将命令"ll / "的标准输出存到 stdoutput.txt        标准错误存到垃圾桶(/dev/null)
+  标准错误不会显示 标准输出存到文件stdoutput.txt中
+[dmtsai@study ~]$ ll /   1>~/stdoutput.txt 2>/dev/null 
+```
+
+```powershell
+实例8:
+利用 cat 指令来建立一个文件的简单流程
+[dmtsai@study ~]$ cat > catfile
+testing 
+cat file test
+<==这里按下 [ctrl]+d 来离开
+```
+
+```powershell
+实例9:
+用 标准输入 取代键盘的输入以建立新文件的简单流程
+也就是将/.bashrc的内容传到catfile里面 (<是覆盖 <<是补充到文件末尾)
+[dmtsai@study ~]$ cat > catfile < ~/.bashrc
+[dmtsai@study ~]$ ll catfile ~/.bashrc
+-rw-r--r--. 1 dmtsai dmtsai 231 Mar 6 06:06 /home/dmtsai/.bashrc
+-rw-rw-r--. 1 dmtsai dmtsai 231 Jul 9 18:58 catfile
+# 注意看，这两个文件的大小会一模一样！几乎像是使用 cp 来复制一般！
+```
+
+```powershell
+实例10:
+键盘的输入以建立新文件 以指定的字符作为结束符
+[dmtsai@study ~]$ cat > catfile << "eof"
+> This is a test.
+> OK now stop
+> > eof <==输入这关键词，立刻就结束而不需要输入 [ctrl]+d
+
+[dmtsai@study ~]$ cat catfile
+This is a test.
+OK now stop <==只有这两行，不会存在关键词那一行
+```
+
+### 多个命令同时执行
+#### 功能
+某些情况下，很多指令我想要一次输入去执行，而不想要分次执行时
+#### 输入语法
+
+```powershell
+方法一:用分号连接 命令之间没有关联
+sync; sync; shutdown -h now 
+```
+```powershell
+方法二:用&&连接
+cmd1 && cmd2
+1. 若 cmd1 执行完毕且正确执行($?=0)，则开始执行 cmd2。
+2. 若 cmd1 执行完毕且为错误 ($?≠0)，则 cmd2 不执行。
+```
+
+```powershell
+方法三:用||连接
+cmd1 || cmd2
+3. 若 cmd1 执行完毕且正确执行($?=0)，则 cmd2 不执行。
+4. 2. 若 cmd1 执行完毕且为错误 ($?≠0)，则开始执行 cmd
+```
+
+### 命令的多行显示
+#### 功能
+如果命令太长可以用多行显示
+#### 输入
+用\符号分割
+#### 实例
+
+```powershell
+[dmtsai@study ~]$ cp /var/spool/mail/root /etc/crontab \
+> /etc/fstab /root
+上面这个指令用途是将三个文件复制到 /root 这个目录下而已。
+```
+
+
+### 命令的通配符
+#### 功能
+对命令进行模糊匹配
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808294494.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+
+```powershell
+范例一:找出 /etc/ 底下以 cron 为开头的档名
+[dmtsai@study ~]$ ll -d /etc/cron*
+<==加上 -d 是为了仅显示目录而已
+
+范例二:找出 /etc/ 底下文件名『刚好是五个字母』的文件名
+[dmtsai@study ~]$ ll -d /etc/?????
+
+范例三:找出 /etc/ 底下文件名含有数字的文件名
+[dmtsai@study ~]$ ll -d /etc/*[0-9]*
+<==记得中括号左右两边均需 *
+
+范例四:找出 /etc/ 底下,档名开头非为小写字母的文件名:
+[dmtsai@study ~]$ ll -d /etc/[^a-z]*
+<==注意中括号左边没有 *
+
+范例五:将范例四找到的文件复制到 /tmp/upper 中
+[dmtsai@study ~]$ mkdir /tmp/upper; cp -a /etc/[^a-z]* /tmp/upper
+```
+
+### 命令的定时执行
+#### 功能
+即crontab命令 ,设定某个命令的周期性执行
+
+#### 输入
+首先要介绍一下 crond，因为 crontab 命令需要 crond服务支持。
+cron 是 Linux 下用来周期地执行某种任务或等待处理某些事件的一个守护进程，
+和 Windows 中的计划任务有些类似。 所以要先打开cron服务
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808430139.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+crontab
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084345660.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084357853.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084449900.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### 命令的执行历史
+#### 功能
+即history命令 ,获取你在终端输入的命令历史
+
+```powershell
+[dmtsai@study ~]$ history [n]
+[dmtsai@study ~]$ history [-c]
+ n :数字,意思是『要列出最近输入的 n条命令 』
+-c :将目前的 shell 中的所有 history 内容全部消除
+```
+
+### 命令的别名
+#### 功能
+即 给命令指定一个别名 主要用在命令比较长的时候
+
+```powershell
+ alias lm='ls -al | more' 比如这个把ls -al | more重命名为lm
+```
+```powershell
+unalias lm  撤销刚才的重命名
+```
+
+
+### 命令的解释
+#### 功能
+即获取命令的manpage   用man命令 
 
 
 ## 性能检测相关命令
