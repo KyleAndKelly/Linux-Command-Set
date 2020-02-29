@@ -1,455 +1,1033 @@
-# 一个小时掌握所有Linux核心命令(2020.02.28更新)
+# 一个小时掌握所有Linux核心命令(2020.02.29更新)
 
 
-## bash相关操作
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228090851592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-###  数据流重导向
-#### 功能
-将命令在终端的标准输出 标准出错 重定向到别的地方比如文件中
-或者读取文件的内容来取代标准输入
+﻿
 
-#### 输入语法
 
-```powershell
-1. 标准输入 (stdin) ：代码为 0 ，使用 < 或 << ； 一般和cat配合使用将一个文件的内容输出到另外一个文件
-2. 标准输出 (stdout)：代码为 1 ，使用 > 或 >> ； 将命令的标准输出重定向到另外一个位置 比如文件中
-3.  标准错误输出(stderr)：代码为 2 ，使用 2> 或 2>> 将命令的标注出错重定向到另外一个位置比如文件中
+
+
+# 文件相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229133041285.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### 文件属性操作
+#### 文件属性组成
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002271749042.png)
+Linux上一个文件属性组成如上,需要注意的是第二部分,格式如下
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200227175436289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+文件类型 
+
 ```
-#### 实例
-
-```powershell
-实例1:
-将命令"ll / "的标准输出存到 ~/rootfile这个文件中  (也可以用1>)
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件 则这个文件的内容将会被全部替换
-[dmtsai@study ~]$ ll / > ~/rootfile 
+  当为[ d]则是目录
+    当为[ -]则是普通文件；
+    若是[ l]则表示为链接文档(link file)；
+    若是[ b]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；
+    若是[ c]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)；
+    若是[s ]则表示为套接接口文件；
+    若是[ p]则表示为管道。
 ```
-
-```powershell
-实例2:
-将命令"ll / "的标准输出存到 ~/rootfile这个文件中(也可以用1>>)
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件 则会将标准输出的内容添加到这个文件原有内容的末尾
-[dmtsai@study ~]$ ll / >> ~/rootfile 
+文件权限
 ```
-
-```powershell
-实例3:
-将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件 则这个文件的内容将会被全部替换
-[dmtsai@study ~]$ ll / 2> ~/rootfile 
+包括
+文件所有者权限 
+文件所属群组权限
+其他用户权限
 ```
 
-```powershell
-实例4:
-将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件  则会将标准错误的内容添加到这个文件原有内容的末尾
-[dmtsai@study ~]$ ll / 2>>~/rootfile 
+####  chgrp
+##### 功能
+
+```bash
+chgrp命令用来改变指定文件所属的用户组。
+如果用户不是该文件的文件主或超级用户(root)，则不能改变该文件的组。
 ```
 
+##### 输入
 
-```powershell
-实例5:
-将命令"ll / "的标准输出存到 stdoutput.txt       将标准错误输出到stderr.txt 
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件 则这个文件的内容将会被全部替换
-[dmtsai@study ~]$ ll / 1>stdoutput.txt 2>~/stderr.txt 
+```bash
+chgrp [-cfhRv][所属群组][文件或目录]
 ```
 
-```powershell
-实例6:
-将命令"ll / "的标准输出和标准错误都存到 stdoutput.txt       
-如果原本没有这个文件 则这个文件将被创建 
-如果原本有这个文件  则这个文件的内容将会被全部替换
-[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>&1  正确写法
-[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>~/stdoutput.txt   错误写法 会导致文件中两种输出是乱序的
+```bash
+-c或——changes：效果类似“-v”参数，但仅回报更改的部分；
+-f或--quiet或——silent：不显示错误信息；
+-h或--no-dereference：只对符号连接的文件作修改，而不是该其他任何相关文件；
+-R或——recursive：递归处理，将指令目录下的所有文件及子目录一并处理；
+-v或——verbose：显示指令执行过程；
 ```
 
-```powershell
-实例7:
-将命令"ll / "的标准输出存到 stdoutput.txt        标准错误存到垃圾桶(/dev/null)
-  标准错误不会显示 标准输出存到文件stdoutput.txt中
-[dmtsai@study ~]$ ll /   1>~/stdoutput.txt 2>/dev/null 
+其中，组名可以是用户组的id，也可以是用户组的组名。
+文件名可以 是由空格分开的要改变属组的文件列表，也可以是由通配符描述的文件集合。
+##### 实例
+
+```bash
+将文件a的用户组从root改为mcc
+sudo chgrp mcc a
+
 ```
 
-```powershell
-实例8:
-利用 cat 指令来建立一个文件的简单流程
-[dmtsai@study ~]$ cat > catfile
-testing 
-cat file test
-<==这里按下 [ctrl]+d 来离开
+####  chown
+##### 功能
+
+chown将指定文件的拥有者改为指定的用户或组，
+普通用户不能将自己的文件改变成其他的拥有者。
+其操作权限一般为管理员root。
+
+##### 输入
+
+```bash
+chown [-cfhvR] user[:group] file.
 ```
 
-```powershell
-实例9:
-用 标准输入 取代键盘的输入以建立新文件的简单流程
-也就是将/.bashrc的内容传到catfile里面 (<是覆盖 <<是补充到文件末尾)
-[dmtsai@study ~]$ cat > catfile < ~/.bashrc
-[dmtsai@study ~]$ ll catfile ~/.bashrc
--rw-r--r--. 1 dmtsai dmtsai 231 Mar 6 06:06 /home/dmtsai/.bashrc
--rw-rw-r--. 1 dmtsai dmtsai 231 Jul 9 18:58 catfile
-# 注意看，这两个文件的大小会一模一样！几乎像是使用 cp 来复制一般！
+```bash
+
+文件是以空格分开的要改变权限的文件列表，支持通配符。
+user : 用户可以是用户名或者用户ID；
+group : 组可以是组名或者组ID；
+-c : 显示更改的部分的信息
+-f : 忽略错误信息
+-h :修复符号链接
+-v : 显示详细的处理信息
+-R : 处理指定目录以及其子目录下的所有文件
 ```
 
-```powershell
-实例10:
-键盘的输入以建立新文件 以指定的字符作为结束符
-[dmtsai@study ~]$ cat > catfile << "eof"
-> This is a test.
-> OK now stop
-> > eof <==输入这关键词，立刻就结束而不需要输入 [ctrl]+d
+##### 实例
 
-[dmtsai@study ~]$ cat catfile
-This is a test.
-OK now stop <==只有这两行，不会存在关键词那一行
+```bash
+改变拥有者和群组
+　　　　chown mail:mail log2012.log
+改变文件拥有者
+　　　　chown root: log2012.log
+改变文件群组
+　　　　chown :mail log2012.log
+改变指定目录以及其子目录下的所有文件的拥有者和群组
+　　　　chown -R -v root:mail test6
 ```
 
-### 多个命令同时执行
-#### 功能
-某些情况下，很多指令我想要一次输入去执行，而不想要分次执行时
-#### 输入语法
+####  chmod
+##### 功能
+改变文件的权限
+##### 输入
 
-```powershell
-方法一:用分号连接 命令之间没有关联
-sync; sync; shutdown -h now 
-```
-```powershell
-方法二:用&&连接
-cmd1 && cmd2
-1. 若 cmd1 执行完毕且正确执行($?=0)，则开始执行 cmd2。
-2. 若 cmd1 执行完毕且为错误 ($?≠0)，则 cmd2 不执行。
-```
+```bash
+chmod [-cfvR] [--help] [--version] mode file...
+参数说明
+mode : 权限设定字串，格式如下 :
 
-```powershell
-方法三:用||连接
-cmd1 || cmd2
-3. 若 cmd1 执行完毕且正确执行($?=0)，则 cmd2 不执行。
-4. 2. 若 cmd1 执行完毕且为错误 ($?≠0)，则开始执行 cmd
-```
+[ugoa...][[+-=][rwxX]...][,...]
+其中：
 
-### 命令的多行显示
-#### 功能
-如果命令太长可以用多行显示
-#### 输入
-用\符号分割
-#### 实例
+u 表示该文件的拥有者，g 表示与该文件的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是。
++ 表示增加权限、- 表示取消权限、= 表示唯一设定权限。
+r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该文件是个子目录或者该文件已经被设定过为可执行。
+其他参数说明：
 
-```powershell
-[dmtsai@study ~]$ cp /var/spool/mail/root /etc/crontab \
-> /etc/fstab /root
-上面这个指令用途是将三个文件复制到 /root 这个目录下而已。
+-c : 若该文件权限确实已经更改，才显示其更改动作
+-f : 若该文件权限无法被更改也不要显示错误讯息
+-v : 显示权限变更的详细资料
+-R : 对目前目录下的所有文件与子目录进行相同的权限变更(即以递回的方式逐个变更)
+--help : 显示辅助说明
+--version : 显示版本
 ```
 
+##### 实例
 
-### 命令的通配符
-#### 功能
-对命令进行模糊匹配
-#### 输入
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808294494.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-#### 实例
+```bash
+将文件 file1.txt 设为所有人皆可读取 :
 
-```powershell
-范例一:找出 /etc/ 底下以 cron 为开头的档名
-[dmtsai@study ~]$ ll -d /etc/cron*
-<==加上 -d 是为了仅显示目录而已
+chmod ugo+r file1.txt
+将文件 file1.txt 设为所有人皆可读取 :
 
-范例二:找出 /etc/ 底下文件名『刚好是五个字母』的文件名
-[dmtsai@study ~]$ ll -d /etc/?????
+chmod a+r file1.txt
+将文件 file1.txt 与 file2.txt 设为该文件拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入 :
 
-范例三:找出 /etc/ 底下文件名含有数字的文件名
-[dmtsai@study ~]$ ll -d /etc/*[0-9]*
-<==记得中括号左右两边均需 *
+chmod ug+w,o-w file1.txt file2.txt
+将 ex1.py 设定为只有该文件拥有者可以执行 :
 
-范例四:找出 /etc/ 底下,档名开头非为小写字母的文件名:
-[dmtsai@study ~]$ ll -d /etc/[^a-z]*
-<==注意中括号左边没有 *
+chmod u+x ex1.py
+将目前目录下的所有文件与子目录皆设为任何人可读取 :
 
-范例五:将范例四找到的文件复制到 /tmp/upper 中
-[dmtsai@study ~]$ mkdir /tmp/upper; cp -a /etc/[^a-z]* /tmp/upper
+chmod -R a+r *
+此外chmod也可以用数字来表示权限如 :
+
+chmod 777 file
+语法为：
+
+chmod abc file
+其中a,b,c各为一个数字，分别表示User、Group、及Other的权限。
+
+r=4，w=2，x=1
+若要rwx属性则4+2+1=7；
+若要rw-属性则4+2=6；
+若要r-x属性则4+1=5。
+chmod a=rwx file
+和
+
+chmod 777 file
+效果相同
+
+chmod ug=rwx,o=x file
+和
+
+chmod 771 file
 ```
 
-### 命令的定时执行
-#### 功能
-即crontab命令 ,设定某个命令的周期性执行
+####  umask
+##### 功能
 
-#### 输入
-首先要介绍一下 crond，因为 crontab 命令需要 crond服务支持。
-cron 是 Linux 下用来周期地执行某种任务或等待处理某些事件的一个守护进程，
-和 Windows 中的计划任务有些类似。 所以要先打开cron服务
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808430139.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-crontab
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084345660.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084357853.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084449900.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### 命令的执行历史
-#### 功能
-即history命令 ,获取你在终端输入的命令历史
 
-```powershell
-[dmtsai@study ~]$ history [n]
-[dmtsai@study ~]$ history [-c]
- n :数字,意思是『要列出最近输入的 n条命令 』
--c :将目前的 shell 中的所有 history 内容全部消除
+```bash
+Linux umask命令指定在建立文件时预设的权限掩码。
+
+umask可用来设定[权限掩码]。[权限掩码]是由3个八进制的数字所组成，
+
+将现有的存取权限减掉权限掩码后，即可产生建立文件时预设的权限。
 ```
 
-### 命令的别名
-#### 功能
-即 给命令指定一个别名 主要用在命令比较长的时候
+##### 输入
 
-```powershell
- alias lm='ls -al | more' 比如这个把ls -al | more重命名为lm
-```
-```powershell
-unalias lm  撤销刚才的重命名
+```bash
+umask [-S][权限掩码]
 ```
 
+##### 实例
 
-### 命令的解释
-#### 功能
-即获取命令的manpage   用man命令 
+```bash
+查看文件掩码
+kylechen@kyle:~$ umask
+0022
+
+```
+
+```bash
+以非数字的形式查看文件掩码
+kylechen@kyle:~$ umask -S
+u=rwx,g=rx,o=rx
+
+```
+
+```bash
+更改文件掩码
+kylechen@kyle:~$ umask 002
+kylechen@kyle:~$ umask
+0002
+
+```
+
+####  test
+##### 功能
+测试文件的某项属性
+##### 输入
+
+```bash
+test [参数][文件]
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228205548958.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228205603201.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### 实例
+实例一:测试文件  /dmtsai 是否存在
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228210041731.png)
+### 文件目录操作
+####  cd
+##### 功能
+变换目录
+
+####  pwd
+##### 功能
+显示当前目录
+
+####  mkdir
+##### 功能
+建立一个新的目录
+
+####  rmdir
+##### 功能
+删除一个空的目录
+
+
+####  tree
+##### 功能
+树状列出目录内容
 
 
 
+### 文件整体操作
+####  ls
+##### 功能
 
+```bash
+ls命令用于显示指定工作目录下之内容
+```
 
-## 变量相关命令
-### 变量的声明赋值
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228133440880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-#### 功能
-相当于是声明一个变量 同时给变量赋值 
-#### 输入
-声明方法1:  通过 赋值符号 =
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228123044705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
- 声明方法2: 通过read
+##### 输入
+
+```bash
+ ls [-alrtAFR] [name]
  
-用read以后 变量赋值是通过**终端等待用户的键盘输入** 来执行
-```powershell
-[dmtsai@study ~]$ read [-pt] variable
-选项与参数：
--p ：后面可以接提示字符！
--t ：后面可以接等待的『秒数！』
+参数 :
+
+-a 显示所有文件及目录 (ls内定将文件名或目录名称开头为"."的视为隐藏档，不会列出)
+-l 除文件名称外，亦将文件型态、权限、拥有者、文件大小等资讯详细列出
+-r 将文件以相反次序显示(原定依英文字母次序)
+-t 将文件依建立时间之先后次序列出
+-A 同 -a ，但不列出 "." (目前目录) 及 ".." (父目录)
+-F 在列出的文件名称后加一符号；例如可执行档则加 "*", 目录则加 "/"
+-R 若目录下有文件，则以下之文件亦皆依序列出
 ```
 
-#### 实例
-```powershell
-变量的普通赋值形式
-[dmtsai@study ~]$ CHENWEIJIE=0820
-```
-
-
-```powershell
-让用户由键盘输入一内容，将该内容变成名为 atest 的变量
-[dmtsai@study ~]$ read ates
-This is a test <==此时光标会等待你输入！请输入左侧文字看看
-[dmtsai@study ~]$ echo ${atest}
-This is a test <==你刚刚输入的数据已经变成一个变量内
-```
-
-```powershell
-让用户由键盘输入一内容, 会有提示的字符串提示你输入 , 然后将该内容变成名为 name 的变量
-kylechen@kyle:~$ read -p"请输入你的姓名:" -t 5 name
-请输入你的姓名:
-kylechen@kyle:~$ echo $name
-chenweijie
-
-```
-
-### 变量的查看转换
-#### 功能
-查看或转化指定的变量 
-#### 输入
-
-```powershell
-echo 查看指定单个变量的值 可以用用**echo PATH** 或者 **echo ${PATH}** 格式
-env  查看所有环境变量
-set 查看所有变量(包括用户设定的变量和环境变量,其他bash接口变量)
-export  变量名=变量值 将自定义变量转化成环境变量
-
-关于环境变量:
-1.  环境变量是用来定义系统运行环境的一些参数，比如每个用户不同的家目录（HOME）、邮件存放位置（MAIL）等。
-2.   环境变量所有终端下所有程序都可直接取用的  可以理解为 环境变量=全局变量  自定义变量=局部变量
-3.   可以通过export将自定义变量设定为当前终端下的环境变量 但是也就是只能当前终端下的父子进程可以取用 其他终端不行
- 4.  可以通过自定义变量的export语句添加到个人目录下的.bashrc文件中 这样当前用户的所有程序都可以使用这个环境变量
-5.   可以通过将自定义变量的export语句添加到/etc/profile文件下 这样所有用户的所有程序都可以使用这个环境变量
-```
-
-#### 实例
-
-```powershell
-输出自定义变量myname
-
-[dmtsai@study ~]$ echo ${myname}
- <==这里并没有任何数据～因为这个变量尚未被设定！是空的[
- dmtsai@study ~]$ myname=VBird
- [dmtsai@study ~]$ echo ${myname}
- VBird <==出现了！因为这个变量已经被设定
-```
-
-```powershell
-输出变量PATH
-[dmtsai@study ~]$ echo  $PATH
-/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
-```
-```powershell
-输出变量PATH
-[dmtsai@study ~]$ echo  ${PATH}
-/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
-```
-
-```powershell
-列出目前的 shell 环境下的所有环境变量与其内容。
-[dmtsai@study ~]$ env
-```
-
-```powershell
-列出目前的 shell 环境下的所有变量。
-[dmtsai@study ~]$ set
-```
-
-```powershell
-将自定义的变量CHENWEIJIE转换成环境变量
-export CHENWEIJIE=0820 
-```
-
-
-
-### 变量的类型指定
-
-#### 功能
-变量声明的时候指定类型
-#### 输入
-
-```powershell
-$ declare [-aixr] variable
-
-选项与参数：
--a ：将后面名为 variable 的变量定义成为数组 (array) 类型
--i ：将后面名为 variable 的变量定义成为整数数字 (integer) 类型
--x ：用法与 export 一样，就是将后面的 variable 变成环境变量；
--r ：将变量设定成为 readonly 类型，该变量不可被更改内容，也不能 unset
-```
-
-#### 实例
-
-```powershell
-范例一：让变量 sum 进行 100+300+50 的加总结果
-[dmtsai@study ~]$ sum=100+300+5
-[dmtsai@study ~]$ echo ${sum}100+300+50 <==咦！怎么没有帮我计算加总？因为这是文字型态的变量属性啊！[dmtsai@study ~]$ declare -i sum=100+300+50
-[dmtsai@study ~]$ echo ${sum}
-450 
-```
-
-```powershell
-范例二：将 sum 变成环境变量
-[dmtsai@study ~]$ declare -x sum
-[dmtsai@study ~]$ export | grep sum
-declare -ix sum="450" <==果然出现了！包括有 i 与 x 的宣告！
-
-范例三：让 sum 变成只读属性，不可更动！[dmtsai@study ~]$ declare -r sum
-[dmtsai@study ~]$ sum=tesgtin-bash: sum: readonly variable <==老天爷～不能改这个变数了！
-
-范例四：让 sum 变成非环境变量的自定义变量吧
-[dmtsai@study ~]$ declare +x sum <== 将 - 变成 + 可以进行『取消』动作
-
-[dmtsai@study ~]$ declare -p sum <== -p 可以单独列出变量的类型
-declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x 
-```
-
-### 变量的比较判断
-
-#### 功能
-类似test命令 
-利用中括号等运算符判断里面的变量是否为空 
-里面的变量比较是否为真等任务
-#### 输入
+##### 实例
 
 ```bash
-[ "$HOME" == "$MAIL"]  判断变量HOME和MAIL是否相同
- [ -z "${HOME}" ]  判断变量HOME是否为空
+列出根目录(\)下的所有目录：
+
+ls /
+bin               dev   lib         media  net   root     srv  upload  www
+boot              etc   lib64       misc   opt   sbin     sys  usr
+home  lost+found  mnt    proc  selinux  tmp  var
+列出目前工作目录下所有名称是 s 开头的文件，越新的排越后面 :
+
+ls -ltr s*
+将 /bin 目录以下所有目录及文件详细资料列出 :
+
+ls -lR /bin
+列出目前工作目录下所有文件及目录；目录于名称后加 "/", 可执行档于名称后加 "*" :
+
+ls -AF
+```
+
+####  ll
+##### 功能
+
+```bash
+ll并不是linux下一个基本的命令，它实际上是ls -l的一个别名。
+Ubuntu默认不支持命令ll，必须用 ls -l，这样使用起来不是很方便。
+如果要使用此命令，可以作如下修改：
+打开 ~/.bashrc
+找到 #alias ll=’ls -l’，去掉前面的#就可以了。
+```
+
+####  cp
+##### 功能
+主要用于复制文件或目录
+##### 输入
+
+```bash
+cp [options] source dest
+
+
+-a：此选项通常在复制目录时使用，它保留链接、文件属性，并复制目录下的所有内容。其作用等于dpR参数组合。
+-d：复制时保留链接。这里所说的链接相当于Windows系统中的快捷方式。
+-f：覆盖已经存在的目标文件而不给出提示。
+-i：与-f选项相反，在覆盖目标文件之前给出提示，要求用户确认是否覆盖，回答"y"时目标文件将被覆盖。
+-p：除复制文件的内容外，还把修改时间和访问权限也复制到新文件中。
+-r：若给出的源文件是一个目录文件，此时将复制该目录下所有的子目录和文件。
+-l：不复制文件，只是生成链接文件。
+```
+
+##### 实例
+使用指令"cp"将当前目录"test/"下的所有文件复制到新目录"newtest"下，输入如下命令：
+$ cp –r test/ newtest  
+        
+####  rm
+##### 功能
+ rm命令用于删除一个文件或者目录
+##### 输入
+
+```bash
+rm [options] name...
+参数：
+
+-i 删除前逐一询问确认。
+-f 即使原档案属性设为唯读，亦直接删除，无需逐一确认。
+-r 将目录及以下之档案亦逐一删除。
+```
+
+##### 实例
+
+```bash
+删除文件可以直接使用rm命令，若删除目录则必须配合选项"-r"，例如：
+
+# rm  test.txt 
+rm：是否删除 一般文件 "test.txt"? y  
+# rm  homework  
+rm: 无法删除目录"homework": 是一个目录  
+# rm  -r  homework  
+rm：是否删除 目录 "homework"? y 
+删除当前目录下的所有文件及目录，命令行为：
+
+rm  -r  * 
+文件一旦通过rm命令删除，则无法恢复，所以必须格外小心地使用该命令。
+```
+
+####  mv
+##### 功能
+用来为文件或目录改名、或将文件或目录移入其它位置
+##### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229111621524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### 实例
+
+```bash
+将文件 aaa 更名为 bbb :
+
+mv aaa bbb
+将info目录放入logs目录中。注意，如果logs目录不存在，则该命令将info改名为logs。
+
+mv info/ logs 
+再如将/usr/student下的所有文件和目录移到当前目录下，命令行为：
+
+$ mv /usr/student/*  . 
+```
+
+####  touch
+##### 功能
+touch命令用于修改文件或者目录的时间属性，包括存取时间和更改时间。若文件不存在，系统会建立一个新的文件。
+##### 输入
+
+```bash
+touch [-acfm][-d<日期时间>][-r<参考文件或目录>] [-t<日期时间>][--help][--version][文件或目录…]
+参数说明：
+a 改变档案的读取时间记录。
+m 改变档案的修改时间记录。
+c 假如目的档案不存在，不会建立新的档案。与 --no-create 的效果一样。
+f 不使用，是为了与其他 unix 系统的相容性而保留。
+r 使用参考档的时间记录，与 --file 的效果一样。
+d 设定时间与日期，可以使用各种不同的格式。
+t 设定档案的时间记录，格式与 date 指令相同。
+--no-create 不会建立新档案。
+--help 列出指令格式。
+--version 列出版本讯息。
+```
+
+##### 实例
+
+```bash
+使用指令"touch"修改文件"testfile"的时间属性为当前系统时间，输入如下命令：
+
+$ touch testfile                #修改文件的时间属性 
+首先，使用ls命令查看testfile文件的属性，如下所示：
+
+$ ls -l testfile                #查看文件的时间属性  
+#原来文件的修改时间为16:09  
+-rw-r--r-- 1 hdd hdd 55 2011-08-22 16:09 testfile  
+执行指令"touch"修改文件属性以后，并再次查看该文件的时间属性，如下所示：
+
+$ touch testfile                #修改文件时间属性为当前系统时间  
+$ ls -l testfile                #查看文件的时间属性  
+#修改后文件的时间属性为当前系统时间  
+-rw-r--r-- 1 hdd hdd 55 2011-08-22 19:53 testfile  
+使用指令"touch"时，如果指定的文件不存在，则将创建一个新的空白文件。例如，在当前目录下，使用该指令创建一个空白文件"file"，输入如下命令：
+
+$ touch file            #创建一个名为“file”的新的空白文件 
+```
+
+####  file
+##### 功能
+ file命令用于辨识文件类型。
+##### 输入
+
+```bash
+file [-bcLvz][-f <名称文件>][-m <魔法数字文件>...][文件或目录...]
+参数：
+
+-b 　列出辨识结果时，不显示文件名称。
+-c 　详细显示指令执行过程，便于排错或分析程序执行的情形。
+-f<名称文件> 　指定名称文件，其内容有一个或多个文件名称时，让file依序辨识这些文件，格式为每列一个文件名称。
+-L 　直接显示符号连接所指向的文件的类别。
+-m<魔法数字文件> 　指定魔法数字文件。
+-v 　显示版本信息。
+-z 　尝试去解读压缩文件的内容。
+[文件或目录...] 要确定类型的文件列表，多个文件之间使用空格分开，可以使用shell通配符匹配多个文件。
+```
+
+##### 实例
+
+```bash
+显示文件类型：
+
+[root@localhost ~]# file install.log
+install.log: UTF-8 Unicode text
+
+[root@localhost ~]# file -b install.log      <== 不显示文件名称
+UTF-8 Unicode text
+
+[root@localhost ~]# file -i install.log      <== 显示MIME类别。
+install.log: text/plain; charset=utf-8
+
+[root@localhost ~]# file -b -i install.log
+text/plain; charset=utf-8
+```
+
+####  which
+##### 功能
+which指令会在环境变量$PATH设置的目录里查找符合条件的文件。并显示它所在的绝对路径
+##### 输入
+which [文件...]
+##### 实例
+
+```bash
+使用指令"which"查看指令"bash"的绝对路径，输入如下命令：
+
+$ which bash
+上面的指令执行后，输出信息如下所示：
+
+/bin/bash                   #bash可执行程序的绝对路径 
+```
+
+####  type
+##### 功能
+查找是否是系统所属的命令
+
+##### 实例
+
+```bash
+kylechen@kyle:~$ type ls
+ls 是 `ls --color=auto' 的别名
+
+
+kylechen@kyle:~$ type if
+if 是 shell 关键字
+
+
+kylechen@kyle:~$ type cd
+cd 是 shell 内建
+
+```
+
+####  whereis
+##### 功能
+该指令只能用于查找二进制文件、源代码文件和man手册页，一般文件的定位需使用locate命令。
+##### 输入
+
+```bash
+whereis [-bfmsu][-B <目录>...][-M <目录>...][-S <目录>...][文件...]
+参数：
+
+-b 　只查找二进制文件。
+-B<目录> 　只在设置的目录下查找二进制文件。
+-f 　不显示文件名前的路径名称。
+-m 　只查找说明文件。
+-M<目录> 　只在设置的目录下查找说明文件。
+-s 　只查找原始代码文件。
+-S<目录> 　只在设置的目录下查找原始代码文件。
+-u 　查找不包含指定类型的文件。
+```
+
+##### 实例
+
+```bash
+使用指令"whereis"查看指令"bash"的位置，输入如下命令：
+
+$ whereis bash 
+上面的指令执行后，输出信息如下所示：
+
+bash:/bin/bash/etc/bash.bashrc/usr/share/man/man1/bash.1.gz 
+注意：以上输出信息从左至右分别为查询的程序名、bash路径、bash的man 手册页路径。
+
+如果用户需要单独查询二进制文件或帮助文件，可使用如下命令：
+
+$ whereis -b bash 
+$ whereis -m bash 
+输出信息如下：
+
+$ whereis -b bash               #显示bash 命令的二进制程序  
+bash: /bin/bash /etc/bash.bashrc /usr/share/bash    # bash命令的二进制程序的地址  
+$ whereis -m bash               #显示bash 命令的帮助文件  
+bash: /usr/share/man/man1/bash.1.gz  #bash命令的帮助文件地址  
+```
+
+####  locate
+##### 功能
+Linux locate命令用于查找符合条件的文档，
+他会去保存文档和目录名称的数据库内，查找合乎范本样式条件的文档或目录。
+一般情况我们只需要输入 locate your_file_name 即可查找指定文件。
+
+
+```bash
+附加说明
+
+locate与find 不同: find 是去硬盘找，locate 只在/var/lib/slocate资料库中找。
+locate的速度比find快，它并不是真的查找，而是查数据库，一般文件数据库在/var/lib/slocate/slocate.db中，所以locate的查找并不是实时的，而是以数据库的更新为准，一般是系统自己维护，也可以手工升级数据库 ，命令为：
+```
+locate -u 
+##### 输入
+
+```bash
+locate [-d ][--help][--version][范本样式...]
+参数：
+
+-d或--database= 配置locate指令使用的数据库。
+locate指令预设的数据库位于/var/lib/slocate目录里，文档名为slocate.db，您可使用 这个参数另行指定。
+--help 　在线帮助。
+--version 　显示版本信息。
+```
+
+##### 实例
+```bash
+查找passwd文件，输入以下命令：
+locate passwd
+```
+####  find
+##### 功能
+查找文件
+
+##### 实例
+
+```bash
+find   -name april*                     在当前目录下查找以april开始的文件
+find   -name   april*   fprint file        在当前目录下查找以april开始的文件，并把结果输出到file中
+find   -name ap* -o -name may*   查找以ap或may开头的文件
+find   /mnt   -name tom.txt   -ftype vfat   在/mnt下查找名称为tom.txt且文件系统类型为vfat的文件
+find   /mnt   -name t.txt ! -ftype vfat   在/mnt下查找名称为tom.txt且文件系统类型不为vfat的文件
+find   /tmp   -name wa* -type l            在/tmp下查找名为wa开头且类型为符号链接的文件
+find   /home   -mtime   -2                 在/home下查最近两天内改动过的文件
+find /home    -atime -1                  查1天之内被存取过的文件
+find /home -mmin    +60                  在/home下查60分钟前改动过的文件
+find /home   -amin   +30                  查最近30分钟前被存取过的文件
+find /home   -newer   tmp.txt             在/home下查更新时间比tmp.txt近的文件或目录
+find /home   -anewer   tmp.txt            在/home下查存取时间比tmp.txt近的文件或目录
+find   /home   -used   -2                  列出文件或目录被改动过之后，在2日内被存取过的文件或目录
+find   /home   -user cnscn                列出/home目录内属于用户cnscn的文件或目录
+find   /home   -uid   +501                  列出/home目录内用户的识别码大于501的文件或目录
+find   /home   -group   cnscn              列出/home内组为cnscn的文件或目录
+find   /home   -gid 501                   列出/home内组id为501的文件或目录
+find   /home   -nouser                    列出/home内不属于本地用户的文件或目录
+find   /home   -nogroup                   列出/home内不属于本地组的文件或目录
+find   /home    -name tmp.txt    -maxdepth   4   列出/home内的tmp.txt 查时深度最多为3层
+find   /home   -name tmp.txt   -mindepth   3   从第2层开始查
+find   /home   -empty                     查找大小为0的文件或空目录
+find   /home   -size   +512k                查大于512k的文件
+find   /home   -size   -512k               查小于512k的文件
+find   /home   -links   +2                查硬连接数大于2的文件或目录
+find   /home   -perm   0700                查权限为700的文件或目录
+find   /tmp   -name tmp.txt   -exec cat {} \;
+find   /tmp   -name   tmp.txt   -ok   rm {} \;
+
+find    /   -amin    -10     # 查找在系统中最后10分钟访问的文件
+find    /   -atime   -2        # 查找在系统中最后48小时访问的文件
+find    /   -empty             # 查找在系统中为空的文件或者文件夹
+find    /   -group   cat        # 查找在系统中属于 groupcat的文件
+find    /   -mmin   -5         # 查找在系统中最后5分钟里修改过的文件
+find    /   -mtime   -1       #查找在系统中最后24小时里修改过的文件
+find    /   -nouser           #查找在系统中属于作废用户的文件
+find    /   -user    fred     #查找在系统中属于FRED这个用户的文件
+```
+
+### 文件内容操作
+####  cat
+##### 功能
+ 由第一行开始显示文件内容
+ 用于连接文件并打印到标准输出设备上
+##### 输入
+
+```bash
+cat [-AbeEnstTuv] [--help] [--version] fileName
+参数说明：
+-n 或 --number：由 1 开始对所有输出的行数编号。
+-b 或 --number-nonblank：和 -n 相似，只不过对于空白行不编号。
+-s 或 --squeeze-blank：当遇到有连续两行以上的空白行，就代换为一行的空白行。
+-v 或 --show-nonprinting：使用 ^ 和 M- 符号，除了 LFD 和 TAB 之外。
+-E 或 --show-ends : 在每行结束处显示 $。
+-T 或 --show-tabs: 将 TAB 字符显示为 ^I。
+-A, --show-all：等价于 -vET。
+-e：等价于"-vE"选项；
+-t：等价于"-vT"选项；
+```
+
+##### 实例
+
+```bash
+把 textfile1 的文档内容加上行号后输入 textfile2 这个文档里：
+
+cat -n textfile1 > textfile2
+把 textfile1 和 textfile2 的文档内容加上行号（空白行不加）之后将内容附加到 textfile3 文档里：
+
+cat -b textfile1 textfile2 >> textfile3
+清空 /etc/test.txt 文档内容：
+
+cat /dev/null > /etc/test.txt
+cat 也可以用来制作镜像文件。例如要制作软盘的镜像文件，将软盘放好后输入：
+
+cat /dev/fd0 > OUTFILE
+相反的，如果想把 image file 写到软盘，输入：
+
+cat IMG_FILE > /dev/fd0
+```
+
+####  tac
+##### 功能
+ 从最后一行开始显示，
+可以看出 tac 是 cat 的倒着写！
+将文件全部内容从尾到头反向连续输出到标准输出(屏幕)上
+
+####  nl
+##### 功能
+显示的时候，顺道输出行号
+其默认的结果与 cat -n 有点不太一样， nl 可以将行号做比较多的显示设计，包括位数与是否自动补齐 0 等等的功能。  
+##### 输入
+
+```bash
+1．命令格式：
+
+nl [选项][文件]
+
+2．命令参数：
+
+-b  ：指定行号指定的方式，主要有两种：
+-b a ：表示不论是否为空行，也同样列出行号(类似 cat -n)；
+-b t ：如果有空行，空的那一行不要列出行号(默认值)；
+-n  ：列出行号表示的方法，主要有三种：
+-n ln ：行号在萤幕的最左方显示；
+-n rn ：行号在自己栏位的最右方显示，且不加 0 ；
+-n rz ：行号在自己栏位的最右方显示，且加 0 ；
+-w  ：行号栏位的占用的位数。
+-p 在逻辑定界符处不重新开始计算。 
+```
+
+##### 实例
+
+```
+实例一：用 nl 列出 log2012.log 的内容
+
+命令：
+
+nl log2012.log
+
+输出：
+
+[root@localhost test]# nl log2012.log 
+
+     1  2012-01
+
+     2  2012-02
+
+       
+
+       
+
+     3  ======[root@localhost test]#
+
+说明：
+
+文件中的空白行，nl 不会加上行号
+```
+
+
+```bash
+实例二：用 nl 列出 log2012.log 的内容，空本行也加上行号
+
+命令：
+
+nl -b a log2012.log
+
+输出：
+
+[root@localhost test]# nl -b a log2012.log 
+
+     1  2012-01
+
+     2  2012-02
+
+     3
+
+     4
+
+     5  ======[root@localhost test]#
+
+```
+
+
+```bash
+
+实例3：让行号前面自动补上0,统一输出格式
+
+命令：
+
+输出：
+
+[root@localhost test]# nl -b a -n rz log2014.log 
+
+000001  2014-01
+
+000002  2014-02
+
+000003  2014-03
+
+000004  2014-04
+
+000005  2014-05
+
+000006  2014-06
+
+000007  2014-07
+
+000008  2014-08
+
+000009  2014-09
+
+000010  2014-10
+
+000011  2014-11
+
+000012  2014-12
+
+000013  =======
+
+[root@localhost test]# nl -b a -n rz -w 3 log2014.log 
+
+001     2014-01
+
+002     2014-02
+
+003     2014-03
+
+004     2014-04
+
+005     2014-05
+
+006     2014-06
+
+007     2014-07
+
+008     2014-08
+
+009     2014-09
+
+010     2014-10
+
+011     2014-11
+
+012     2014-12
+
+013     =======
+```
+
+####  more
+##### 功能
+ 一页一页的显示文件内容
+
+##### 输入
+
+```bash
+more [filename]
+```
+ 常用操作命令
+Enter 向下n行，需要定义。默认为1行
+Ctrl+F 向下滚动一屏
+空格键 向下滚动一屏
+Ctrl+B 返回上一屏
+= 输出当前行的行号
+：f 输出文件名和当前行的行号
+V 调用vi编辑器
+!命令 调用Shell，并执行命令
+q 退出more
+####  less
+##### 功能
+less 与 more 类似，
+但是比 more 更好的是，他可以往前翻页！
+##### 实例
+
+```bash
+1、查看文件
+
+less log2013.log
+2、ps查看进程信息并通过less分页显示
+
+ps -ef |less
+3、查看命令历史使用记录并通过less分页显示
+
+[root@localhost test]# history | less
+22  scp -r tomcat6.0.32 root@192.168.120.203:/opt/soft
+23  cd ..
+24  scp -r web root@192.168.120.203:/opt/
+25  cd soft
+26  ls
+……省略……
+4、浏览多个文件
+
+less log2013.log log2014.log
+说明：
+输入 ：n后，切换到 log2014.log
+输入 ：p 后，切换到log2013.log
+```
+1.全屏导航
+
+ctrl + F - 向前移动一屏
+ctrl + B - 向后移动一屏
+ctrl + D - 向前移动半屏
+ctrl + U - 向后移动半屏
+2.单行导航
+
+j - 向前移动一行
+k - 向后移动一行
+3.其它导航
+
+G - 移动到最后一行
+g - 移动到第一行
+q / ZZ - 退出 less 命令
+####  head
+##### 功能
+只看头几行
+##### 输入
+
+```bash
+1、用法
+
+head [选项] [文件..]
+
+2、命令选项
+
+-c, --bytes=[-]K 　　k,显示文档开始的前k个字节，-k,不显示文档结尾的最后 k 个字节
+-n, --lines=[-]K 　　 k,显示文档开始的前k行，-k,不显示文档结尾的最后 k 行
+```
+
+##### 实例
+
+```
+1）显示  a.txt  前 5 行内容
+
+复制代码
+[root@mini ~]# cat a.txt 
+01
+02
+03
+04
+05
+06
+07
+08
+09
+10
+11
+12
+[root@mini ~]# head -5 a.txt 
+01
+02
+03
+04
+05
+[root@mini ~]# head -n 5 a.txt 
+01
+02
+03
+04
+05
+复制代码
  
-如上所示 中括号的使用方法与 test 几乎一模一样啊
-只不过需要有以下注意点
+
+2）显示除了  a.txt  最后 10 行的内容
+
+[root@mini ~]# head -n -10 a.txt 
+01
+02
+[root@mini ~]# 
 ```
 
-使用注意点:
+####  tail
+##### 功能
+只看尾巴几行
+##### 输入
 
 ```bash
-1.在中括号内的变量，最好都以双引号括号起来； 因为可能出现以下问题
+tail [参数] [文件]  
+参数：
+
+-f 循环读取
+-q 不显示处理信息
+-v 显示详细的处理信息
+-c<数目> 显示的字节数
+-n<行数> 显示文件的尾部 n 行内容
+--pid=PID 与-f合用,表示在进程ID,PID死掉之后结束
+-q, --quiet, --silent 从不输出给出文件名的首部
+-s, --sleep-interval=S 与-f合用,表示在每次反复的间隔休眠S秒
 ```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211809474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 
 ```bash
-2/在中括号内的常数，最好都以单或双引号括号
+
+有一个常用的参数 -f 常用于查阅正在改变的日志文件。
+tail -f filename 会把 filename 文件里的最尾部的内容显示在屏幕上，
+并且不断刷新，只要 filename 更新就可以看到最新的文件内容。
 ```
 
-```powershell
-3.在中括号 [] 内的每个组件都需要有空格键来分隔；
-使用中括号必须要特别注意，因为中括号用在很多地方，
-包括通配符与正规表示法等等，
-所以如果要在 bash 的语法当中使用中括号作为 shell 的判断式时，
-必须要注意中括号的两端需要有空格符来分隔
- 假设我空格键使用『□』符号来表示，那么，在这些地方你都需要有空格键：
-```
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211244883.png)
-
-
-```
-
-
-
-## 管道相关命令
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143647614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### cut
-#### 功能
- 主要的用途在于将『同一行里面的数据进行分解！』  处理的讯息是以『行』为单位
- 以某些字符当作分割的参数，然后来将数据加以切割，
- 以取得我们所需要的数据。
-#### 输入
+##### 实例
 
 ```bash
-cut[参数]
+要显示 notes.log 文件的最后 10 行，请输入以下命令：
+
+tail notes.log
+要跟踪名为 notes.log 的文件的增长情况，请输入以下命令：
+
+tail -f notes.log
+此命令显示 notes.log 文件的最后 10 行。当将某些行添加至 notes.log 文件时，tail 命令会继续显示这些行。 显示一直继续，直到您按下（Ctrl-C）组合键停止显示。
+
+显示文件 notes.log 的内容，从第 20 行至文件末尾:
+
+tail +20 notes.log
+显示文件 notes.log 的最后 10 个字符:
+
+tail -c 10 notes.log
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143932517.png)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144008177.png)
-#### 实例
-![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281442412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144301192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022814431570.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### grep
-#### 功能
-刚刚的 cut 是将一行讯息当中，取出某部分我们想要的，
-而 grep 则是分析一行讯息， 若当中有我
-们所需要的信息，就将该行拿出来～
-#### 输入
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144353837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-#### 实例
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144408503.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### sort
-#### 功能
-把输出的结果进行排序
-#### 输入
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144422185.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-#### 实例
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144509260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144519163.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### uniq
-#### 功能
-将重复的资料仅列出一个显示
-#### 输入
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144548383.png)
-#### 实例
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144559526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-### wc
-#### 功能
-统计有多少字符 多少行
-#### 输入
-![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281446381.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-#### 实例
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144651249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+####  tar
+##### 功能
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229122232926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+linux下的压缩文件类型如上
+现在 compress zip指令几乎不用了
+一般用的是gzip bzip2 xz的压缩指令 
+但是用这三个指定每次只能压缩/解压缩一个文件 
+故引入了tar指令 先将要压缩的多个文件打包 然后再压缩 解压缩同理
+tar指令提供了很多的参数  可以同时提供打包和压缩功能 (解打包和解压缩)
+##### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229121758266.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229121810616.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+
+
+####  awk
+##### 功能
+数据处理
+相较于 sed 常常作用于一整个行的处理，
+ awk 则比较倾向于一行当中分成数个『字段』来处理。
+因此，awk 相当的适合处理小型的数据数据处理
+
+##### 实例
+待补充
+
+
+####  sed
+##### 功能
+数据处理
+##### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002291309006.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229130914279.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229130925562.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229130935758.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229131011917.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229131043833.png)
+####  diff
+##### 功能
+diff 就是用在比对两个文件之间的差异的，
+并且是以行为单位来比对的！
+一般是用在 ASCII 纯文本
+档的比对上。 由于是以行为比对的单位，
+因此 diff 通常是用在同一的文件(或软件)的新旧版本差异上！
+##### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229132329712.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### 实例
+实例一:比较两文件的不同
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229132657416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+实例二:比较两目录的不同
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229132723555.png)
+
+####  vim
+##### 功能
+vim编辑器的常用指令
+##### 实例
+[30分钟学会Vim](https://blog.csdn.net/vjhghjghj/article/details/104536578)
+
+
+
+
 
 
 ## 性能检测相关命令
@@ -1820,5 +2398,637 @@ lo    Link encap:Local Loopback
 //设置能通过的最大数据包大小为 1500 bytes
 ```
 
+
+
+
+
+
+## bash相关操作
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228090851592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+###  数据流重导向
+#### 功能
+将命令在终端的标准输出 标准出错 重定向到别的地方比如文件中
+或者读取文件的内容来取代标准输入
+
+#### 输入语法
+
+```powershell
+1. 标准输入 (stdin) ：代码为 0 ，使用 < 或 << ； 一般和cat配合使用将一个文件的内容输出到另外一个文件
+2. 标准输出 (stdout)：代码为 1 ，使用 > 或 >> ； 将命令的标准输出重定向到另外一个位置 比如文件中
+3.  标准错误输出(stderr)：代码为 2 ，使用 2> 或 2>> 将命令的标注出错重定向到另外一个位置比如文件中
+```
+#### 实例
+
+```powershell
+实例1:
+将命令"ll / "的标准输出存到 ~/rootfile这个文件中  (也可以用1>)
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / > ~/rootfile 
+```
+
+```powershell
+实例2:
+将命令"ll / "的标准输出存到 ~/rootfile这个文件中(也可以用1>>)
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则会将标准输出的内容添加到这个文件原有内容的末尾
+[dmtsai@study ~]$ ll / >> ~/rootfile 
+```
+
+```powershell
+实例3:
+将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 2> ~/rootfile 
+```
+
+```powershell
+实例4:
+将命令"ll / "的标准错误存到 ~/rootfile这个文件中 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件  则会将标准错误的内容添加到这个文件原有内容的末尾
+[dmtsai@study ~]$ ll / 2>>~/rootfile 
+```
+
+
+```powershell
+实例5:
+将命令"ll / "的标准输出存到 stdoutput.txt       将标准错误输出到stderr.txt 
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件 则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 1>stdoutput.txt 2>~/stderr.txt 
+```
+
+```powershell
+实例6:
+将命令"ll / "的标准输出和标准错误都存到 stdoutput.txt       
+如果原本没有这个文件 则这个文件将被创建 
+如果原本有这个文件  则这个文件的内容将会被全部替换
+[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>&1  正确写法
+[dmtsai@study ~]$ ll / 1>stdoutput.txt  2>~/stdoutput.txt   错误写法 会导致文件中两种输出是乱序的
+```
+
+```powershell
+实例7:
+将命令"ll / "的标准输出存到 stdoutput.txt        标准错误存到垃圾桶(/dev/null)
+  标准错误不会显示 标准输出存到文件stdoutput.txt中
+[dmtsai@study ~]$ ll /   1>~/stdoutput.txt 2>/dev/null 
+```
+
+```powershell
+实例8:
+利用 cat 指令来建立一个文件的简单流程
+[dmtsai@study ~]$ cat > catfile
+testing 
+cat file test
+<==这里按下 [ctrl]+d 来离开
+```
+
+```powershell
+实例9:
+用 标准输入 取代键盘的输入以建立新文件的简单流程
+也就是将/.bashrc的内容传到catfile里面 (<是覆盖 <<是补充到文件末尾)
+[dmtsai@study ~]$ cat > catfile < ~/.bashrc
+[dmtsai@study ~]$ ll catfile ~/.bashrc
+-rw-r--r--. 1 dmtsai dmtsai 231 Mar 6 06:06 /home/dmtsai/.bashrc
+-rw-rw-r--. 1 dmtsai dmtsai 231 Jul 9 18:58 catfile
+# 注意看，这两个文件的大小会一模一样！几乎像是使用 cp 来复制一般！
+```
+
+```powershell
+实例10:
+键盘的输入以建立新文件 以指定的字符作为结束符
+[dmtsai@study ~]$ cat > catfile << "eof"
+> This is a test.
+> OK now stop
+> > eof <==输入这关键词，立刻就结束而不需要输入 [ctrl]+d
+
+[dmtsai@study ~]$ cat catfile
+This is a test.
+OK now stop <==只有这两行，不会存在关键词那一行
+```
+
+### 多个命令同时执行
+#### 功能
+某些情况下，很多指令我想要一次输入去执行，而不想要分次执行时
+#### 输入语法
+
+```powershell
+方法一:用分号连接 命令之间没有关联
+sync; sync; shutdown -h now 
+```
+```powershell
+方法二:用&&连接
+cmd1 && cmd2
+1. 若 cmd1 执行完毕且正确执行($?=0)，则开始执行 cmd2。
+2. 若 cmd1 执行完毕且为错误 ($?≠0)，则 cmd2 不执行。
+```
+
+```powershell
+方法三:用||连接
+cmd1 || cmd2
+3. 若 cmd1 执行完毕且正确执行($?=0)，则 cmd2 不执行。
+4. 2. 若 cmd1 执行完毕且为错误 ($?≠0)，则开始执行 cmd
+```
+
+### 命令的多行显示
+#### 功能
+如果命令太长可以用多行显示
+#### 输入
+用\符号分割
+#### 实例
+
+```powershell
+[dmtsai@study ~]$ cp /var/spool/mail/root /etc/crontab \
+> /etc/fstab /root
+上面这个指令用途是将三个文件复制到 /root 这个目录下而已。
+```
+
+
+### 命令的通配符
+#### 功能
+对命令进行模糊匹配
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808294494.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+
+```powershell
+范例一:找出 /etc/ 底下以 cron 为开头的档名
+[dmtsai@study ~]$ ll -d /etc/cron*
+<==加上 -d 是为了仅显示目录而已
+
+范例二:找出 /etc/ 底下文件名『刚好是五个字母』的文件名
+[dmtsai@study ~]$ ll -d /etc/?????
+
+范例三:找出 /etc/ 底下文件名含有数字的文件名
+[dmtsai@study ~]$ ll -d /etc/*[0-9]*
+<==记得中括号左右两边均需 *
+
+范例四:找出 /etc/ 底下,档名开头非为小写字母的文件名:
+[dmtsai@study ~]$ ll -d /etc/[^a-z]*
+<==注意中括号左边没有 *
+
+范例五:将范例四找到的文件复制到 /tmp/upper 中
+[dmtsai@study ~]$ mkdir /tmp/upper; cp -a /etc/[^a-z]* /tmp/upper
+```
+
+### 命令的定时执行
+#### 功能
+即crontab命令 ,设定某个命令的周期性执行
+
+#### 输入
+首先要介绍一下 crond，因为 crontab 命令需要 crond服务支持。
+cron 是 Linux 下用来周期地执行某种任务或等待处理某些事件的一个守护进程，
+和 Windows 中的计划任务有些类似。 所以要先打开cron服务
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022808430139.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+crontab
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084345660.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084357853.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228084449900.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### 命令的执行历史
+#### 功能
+即history命令 ,获取你在终端输入的命令历史
+
+```powershell
+[dmtsai@study ~]$ history [n]
+[dmtsai@study ~]$ history [-c]
+ n :数字,意思是『要列出最近输入的 n条命令 』
+-c :将目前的 shell 中的所有 history 内容全部消除
+```
+
+### 命令的别名
+#### 功能
+即 给命令指定一个别名 主要用在命令比较长的时候
+
+```powershell
+ alias lm='ls -al | more' 比如这个把ls -al | more重命名为lm
+```
+```powershell
+unalias lm  撤销刚才的重命名
+```
+
+
+### 命令的解释
+#### 功能
+即获取命令的manpage   用man命令 
+
+
+
+
+
+## 变量相关命令
+### 变量的声明赋值
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228133440880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 功能
+相当于是声明一个变量 同时给变量赋值 
+#### 输入
+声明方法1:  通过 赋值符号 =
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228123044705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+ 声明方法2: 通过read
+ 
+用read以后 变量赋值是通过**终端等待用户的键盘输入** 来执行
+```powershell
+[dmtsai@study ~]$ read [-pt] variable
+选项与参数：
+-p ：后面可以接提示字符！
+-t ：后面可以接等待的『秒数！』
+```
+
+#### 实例
+```powershell
+变量的普通赋值形式
+[dmtsai@study ~]$ CHENWEIJIE=0820
+```
+
+
+```powershell
+让用户由键盘输入一内容，将该内容变成名为 atest 的变量
+[dmtsai@study ~]$ read ates
+This is a test <==此时光标会等待你输入！请输入左侧文字看看
+[dmtsai@study ~]$ echo ${atest}
+This is a test <==你刚刚输入的数据已经变成一个变量内
+```
+
+```powershell
+让用户由键盘输入一内容, 会有提示的字符串提示你输入 , 然后将该内容变成名为 name 的变量
+kylechen@kyle:~$ read -p"请输入你的姓名:" -t 5 name
+请输入你的姓名:
+kylechen@kyle:~$ echo $name
+chenweijie
+
+```
+
+### 变量的查看转换
+#### 功能
+查看或转化指定的变量 
+#### 输入
+
+```powershell
+echo 查看指定单个变量的值 可以用用**echo PATH** 或者 **echo ${PATH}** 格式
+env  查看所有环境变量
+set 查看所有变量(包括用户设定的变量和环境变量,其他bash接口变量)
+export  变量名=变量值 将自定义变量转化成环境变量
+
+关于环境变量:
+1.  环境变量是用来定义系统运行环境的一些参数，比如每个用户不同的家目录（HOME）、邮件存放位置（MAIL）等。
+2.   环境变量所有终端下所有程序都可直接取用的  可以理解为 环境变量=全局变量  自定义变量=局部变量
+3.   可以通过export将自定义变量设定为当前终端下的环境变量 但是也就是只能当前终端下的父子进程可以取用 其他终端不行
+ 4.  可以通过自定义变量的export语句添加到个人目录下的.bashrc文件中 这样当前用户的所有程序都可以使用这个环境变量
+5.   可以通过将自定义变量的export语句添加到/etc/profile文件下 这样所有用户的所有程序都可以使用这个环境变量
+```
+
+#### 实例
+
+```powershell
+输出自定义变量myname
+
+[dmtsai@study ~]$ echo ${myname}
+ <==这里并没有任何数据～因为这个变量尚未被设定！是空的[
+ dmtsai@study ~]$ myname=VBird
+ [dmtsai@study ~]$ echo ${myname}
+ VBird <==出现了！因为这个变量已经被设定
+```
+
+```powershell
+输出变量PATH
+[dmtsai@study ~]$ echo  $PATH
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
+```
+```powershell
+输出变量PATH
+[dmtsai@study ~]$ echo  ${PATH}
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/dmtsai/.local/bin:/home/dmtsai/b
+```
+
+```powershell
+列出目前的 shell 环境下的所有环境变量与其内容。
+[dmtsai@study ~]$ env
+```
+
+```powershell
+列出目前的 shell 环境下的所有变量。
+[dmtsai@study ~]$ set
+```
+
+```powershell
+将自定义的变量CHENWEIJIE转换成环境变量
+export CHENWEIJIE=0820 
+```
+
+
+
+### 变量的类型指定
+
+#### 功能
+变量声明的时候指定类型
+#### 输入
+
+```powershell
+$ declare [-aixr] variable
+
+选项与参数：
+-a ：将后面名为 variable 的变量定义成为数组 (array) 类型
+-i ：将后面名为 variable 的变量定义成为整数数字 (integer) 类型
+-x ：用法与 export 一样，就是将后面的 variable 变成环境变量；
+-r ：将变量设定成为 readonly 类型，该变量不可被更改内容，也不能 unset
+```
+
+#### 实例
+
+```powershell
+范例一：让变量 sum 进行 100+300+50 的加总结果
+[dmtsai@study ~]$ sum=100+300+5
+[dmtsai@study ~]$ echo ${sum}100+300+50 <==咦！怎么没有帮我计算加总？因为这是文字型态的变量属性啊！[dmtsai@study ~]$ declare -i sum=100+300+50
+[dmtsai@study ~]$ echo ${sum}
+450 
+```
+
+```powershell
+范例二：将 sum 变成环境变量
+[dmtsai@study ~]$ declare -x sum
+[dmtsai@study ~]$ export | grep sum
+declare -ix sum="450" <==果然出现了！包括有 i 与 x 的宣告！
+
+范例三：让 sum 变成只读属性，不可更动！[dmtsai@study ~]$ declare -r sum
+[dmtsai@study ~]$ sum=tesgtin-bash: sum: readonly variable <==老天爷～不能改这个变数了！
+
+范例四：让 sum 变成非环境变量的自定义变量吧
+[dmtsai@study ~]$ declare +x sum <== 将 - 变成 + 可以进行『取消』动作
+
+[dmtsai@study ~]$ declare -p sum <== -p 可以单独列出变量的类型
+declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x 
+```
+
+### 变量的比较判断
+
+#### 功能
+类似test命令 
+利用中括号等运算符判断里面的变量是否为空 
+里面的变量比较是否为真等任务
+#### 输入
+
+```bash
+[ "$HOME" == "$MAIL"]  判断变量HOME和MAIL是否相同
+ [ -z "${HOME}" ]  判断变量HOME是否为空
+ 
+如上所示 中括号的使用方法与 test 几乎一模一样啊
+只不过需要有以下注意点
+```
+
+使用注意点:
+
+```bash
+1.在中括号内的变量，最好都以双引号括号起来； 因为可能出现以下问题
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211809474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+```bash
+2/在中括号内的常数，最好都以单或双引号括号
+```
+
+```powershell
+3.在中括号 [] 内的每个组件都需要有空格键来分隔；
+使用中括号必须要特别注意，因为中括号用在很多地方，
+包括通配符与正规表示法等等，
+所以如果要在 bash 的语法当中使用中括号作为 shell 的判断式时，
+必须要注意中括号的两端需要有空格符来分隔
+ 假设我空格键使用『□』符号来表示，那么，在这些地方你都需要有空格键：
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211244883.png)
+
+
+```
+
+
+
+## 管道相关命令
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143647614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### cut
+#### 功能
+ 主要的用途在于将『同一行里面的数据进行分解！』  处理的讯息是以『行』为单位
+ 以某些字符当作分割的参数，然后来将数据加以切割，
+ 以取得我们所需要的数据。
+#### 输入
+
+```bash
+cut[参数]
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143932517.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144008177.png)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281442412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144301192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020022814431570.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### grep
+#### 功能
+刚刚的 cut 是将一行讯息当中，取出某部分我们想要的，
+而 grep 则是分析一行讯息， 若当中有我
+们所需要的信息，就将该行拿出来～
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144353837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144408503.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### sort
+#### 功能
+把输出的结果进行排序
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144422185.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144509260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144519163.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### uniq
+#### 功能
+将重复的资料仅列出一个显示
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144548383.png)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144559526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### wc
+#### 功能
+统计有多少字符 多少行
+#### 输入
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202002281446381.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 实例
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228144651249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+
+
+
+# Shell脚本相关命令
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214940233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+## 介绍
+一句话说明shell脚本是个啥
+shell脚本就是将多个shell指令汇集到一起去完成一个复杂的功能
+类似windows下的批处理文件 一般以sh为文件后缀
+
+## 语法
+### 程序结构
+一张图说明shell脚本的结构是怎样的
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228185208283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+如上图所示 
+右边就是最简单的一个shell脚本 , 功能是打印出"Hello World
+左边就是它对应的一个程序结构 ,依次是 shell版本声明 注释部分声明 环境变量声明 程序主体  退出返回
+下面依次讲解
+
+### shell版本声明
+
+```
+第一行 #!/bin/bash 声明这个 脚本 使用的shell版本：
+因为shell有很多种类型 比如sh,bash,csh,tcsh 
+如果不指定版本 系统会不知道用哪一个版本的shell去处理这个脚本
+所以会报错
+一般linux发行版默认内置的是bash 所以一般是写#!/bin/bash
+```
+
+### 注释部分声明
+说明程序的作者 功能  编辑时间等等信息
+
+### 环境变量声明
+环境变量是用来定义系统运行环境的一些参数的变量
+比如每个用户不同的家目录（HOME）、邮件存放位置（MAIL）等。
+具体可以看[后端开发必须掌握的Linux命令[变量篇]](https://blog.csdn.net/vjhghjghj/article/details/104553902)中的讲解
+
+```bash
+其中比较重要的一个环境变量是PATH
+它代表的是一系列路径的字符串集合
+它默认存放了下面的路径地址 如 
+usr/local/sbin
+/usr/local/bin
+/usr/sbin
+/usr/bin等等
+```
+
+```bash
+比如当你在shell脚本中调用命令echo的时候
+本质上系统就会从PATH存放的路径集合中
+去寻找这些路径中是不是包含了命令echo对应的可执行文件
+如果找的到 就执行 如果找不到的话你调用echo就会报错
+```
+
+```bash
+这样就有一个问题 
+假如你调用的一个比较陌生的命令
+它所对应的文件路径 
+不在PATH默认的路径集合中中
+```
+
+ **你就需要把它加入PATH **(用冒号 等于号)****
+ **然后在对它重新声明为环境变量(用export)**
+
+```bash
+  这样才可以 否则还是会报错的
+ 一般常用的命令比如ls echo 等等
+ 是默认已经包含在PATH变量的路径集合中了 所以开头不需要声明
+ 这里只是为了讲解程序的标准结构故引出来了
+```
+
+### 程序主体
+#### 普通语句
+就是用普通的命令组成的语句
+#### 条件语句
+##### 简单的if ....then
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228212646142.png)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214354191.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### 复杂的if ....then
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228212715579.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214426476.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+##### ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214508222.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### case....esac
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214539516.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214603373.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+#### 循环语句
+#####  while do done
+当while中的条件为真的时候就继续执行
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228212856249.png)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214627179.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+
+#####  until do done
+当until中的条件为真的时候就结束执行
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228213031443.png)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214747728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+##### for...do...done
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228213157751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214153713.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+##### for...do...done的数值处理结构
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228213437662.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+实例:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228214016690.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+### 退出返回
+
+在我们这个例子当中，使用 exit 0 ，
+这代表离开 script 并且回传一个 0 给系统，
+ 所以执行完这个 script 后，若接着下达 echo $? 则可得到0 值！
+利用这个 exit n (n 是数字) 的功能，我们还可以自定义错误返回值 从而使程序更聪明
+
+## 执行
+假设我们编写好的shell脚本的文件名为hello.sh，文件位置在/data/shell目录中并已有执行权限
+
+执行方法一:通过路径
+
+```bash
+1、相对路径
+cd /data/shell
+./hello.sh
+
+2、绝对路径
+/data/shell/hello.sh
+```
+
+执行方法二:通过sh或bash
+
+```bash
+sh
+cd /data/shell
+sh hello.sh
+
+
+bash
+cd /data/shell
+bash hello.sh
+```
+
+执行方法三:通过 source 或.(点号)
+
+```bash
+source
+cd /data/shell
+source hello.sh
+
+.
+cd /data/shell
+. hello.sh
+```
+
+区别：
+
+1.绝对路径和相对路径没有什么区别，两种方式都需要提前赋予脚本以执行权限。
+
+2.sh或者bash方式是把脚本当做bash的调用来处理，所以，脚本不需要有执行权限就可以执行。
+前两种方式都是在当前shell中打开一个子shell来执行脚本内容，当脚本内容结束，则子shell关闭，回到父shell中。
+
+3.source或者.方式是使脚本内容在当前shell里执行，而不是单独开子shell执行。
+
+4.开子shell与不开子shell的区别就在于，环境变量的继承关系，如在子shell中设置的当前变量，
+不做特殊通道处理的话，父shell是不可见的。
+而在当前shell中执行的话，则所有设置的环境变量都是直接生效可用的。
+
+
+
+## 调试
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228213624306.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 
 
