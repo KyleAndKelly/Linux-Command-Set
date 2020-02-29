@@ -1,9 +1,7 @@
 # 一个小时掌握所有Linux核心命令(2020.02.29更新)
 
 
-﻿![在这里插入图片描述](https://img-blog.csdnimg.cn/202002291340289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-
-
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229142633612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 
 
 # 文件相关命令
@@ -1023,7 +1021,7 @@ diff 就是用在比对两个文件之间的差异的，
 ##### 功能
 vim编辑器的常用指令
 ##### 实例
-[30分钟学会Vim](https://blog.csdn.net/vjhghjghj/article/details/104536578)
+[20分钟学会Vim](https://blog.csdn.net/vjhghjghj/article/details/104536578)
 
 
 
@@ -2798,12 +2796,16 @@ declare -ir sum="450" <== 看吧！只剩下 i, r 的类型，不具有 x
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228211244883.png)
 
 
-```
+
 
 
 
 ## 管道相关命令
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200228143647614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+
+
+
+
 ### cut
 #### 功能
  主要的用途在于将『同一行里面的数据进行分解！』  处理的讯息是以『行』为单位
