@@ -2,18 +2,24 @@
 
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229182058602.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
-
+< br >
+< br >
+< br >
+< br >
 # 文件相关命令
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200229133041285.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
 ### 文件属性操作
 #### 文件属性组成
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/202002271749042.png)
-Linux上一个文件属性组成如上,需要注意的是第二部分,格式如下
+< br >
+Linux上的一个文件属性组成如上,需要注意的是第二部分,格式如下
+< br >
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200227175436289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZqaGdoamdoag==,size_16,color_FFFFFF,t_70)
+< br >
 文件类型 
 
 ```
-  当为[ d]则是目录
+    当为[ d]则是目录
     当为[ -]则是普通文件；
     若是[ l]则表示为链接文档(link file)；
     若是[ b]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；
