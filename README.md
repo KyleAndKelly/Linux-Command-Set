@@ -1000,7 +1000,8 @@ tar指令提供了很多的参数  可以同时提供打包和压缩功能 (解�
 因此，awk 相当的适合处理小型的数据数据处理
 
 ##### 实例
-待补充
+https://www.cnblogs.com/virgosnail/p/11103651.html
+https://www.cnblogs.com/slqdba/p/10470270.html
 
 
 ####  sed
